@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         alignContent: 'center',
         justifyContent: 'space-between',
-        marginTop: 50
+        marginTop: 50 
     },
     selectButton:{
         width: 163,
