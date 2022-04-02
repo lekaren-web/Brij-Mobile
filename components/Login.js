@@ -15,6 +15,7 @@ import {
 
 const Login = ({navigation}) => {
   return (
+    <SafeAreaView style={{flex: 1, backgroundColor: '#7F5AF0'}}>
     <View styles={{backgroundColor: '#7F5AF0'}}>
       <StatusBar styles={{backgroundColor: '#7F5AF0'}} />
       {/* outercontainer */}
@@ -55,13 +56,14 @@ const Login = ({navigation}) => {
       {/* <BackgroundImage source={}>
         </BackgroundImage> */}
     </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   bottomTextDescContainer: {
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
   },
   bottomTextDesc: {
     color: 'white',
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     padding: 10,
-    paddingBottom: 20,
+    paddingBottom: 0,
     display: 'flex',
     flexDirection: 'column',
     position: 'absolute',

@@ -1,5 +1,5 @@
 // screens/AddUserScreen.js
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { IconButton, Colors } from "react-native-paper";
 import { db } from "../database/firebaseDb";
 import {
@@ -11,54 +11,31 @@ import {
   View,
   Text,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight,
+
 } from "react-native";
-
-
+// import { Icon } from 'react-native-elements'
 class LookingFor extends Component {
-  constructor() {
-    super();
-    this.state = {
-      optionList:['Goal Setting','Career Mapping', 'Resume Review', 'Portfolio Creation', 'Interview Tips', 'Project Advice', 'Networking Advice'],
-      isLoading: false,
-    };
-  }
-
-  async componentDidMount() {
-  }
-
-  async editMM(val){
-    if(this.state.mentor && !this.state.mentee){
-        this.setState({backgroundColorMentor : '#D9CEFB', colorMentor : '#7F5AF0'})
-    } else if(!this.state.mentor) {
-        this.setState({backgroundColorMentor : '#7F5AF0', colorMentor : 'white'})
+    constructor(props) {
+        super(props);
+        this.state = {
+            pressed: false,
+            optionList: ['Goal Setting','Career Mapping', 'Resume Review', 'Portfolio Creation', 'Interview Tips', 'Project Advice', 'Networking Advice'],
+        };
     }
-    if(this.state.mentee  && !this.state.mentor){
-        this.setState({backgroundColorMentee : '#D9CEFB', colorMentee : '#7F5AF0'})
-    }else if (!this.state.mentee){
-        this.setState({backgroundColorMentee : '#7F5AF0', colorMentee : 'white'})
-    }
+//   constructor() {
+//     super();
+    
+//   }
 
-    if(this.state.mentor && this.state.mentee){
-        this.setState({backgroundColorBoth : '#D9CEFB', colorBoth : '#7F5AF0'})
-        this.setState({backgroundColorMentee : '#7F5AF0', colorMentee : 'white'})
-        this.setState({backgroundColorMentor : '#7F5AF0', colorMentor : 'white'})
-    }else if (!this.state.mentor && !this.state.mentee) {
-        this.setState({backgroundColorBoth : '#7F5AF0', colorBoth : 'white'})
-    }
-
-
-//   this.props.navigation.navigate("PhoneCodeVerification");
- }
-
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E" />
-        </View>
-      );
-    }
+render () {
+    //     if (this.state.isLoading) {
+//       return (
+//         <View style={styles.preloader}>
+//           <ActivityIndicator size="large" color="#9E9E9E" />
+//         </View>
+//       );
     return (
       <SafeAreaView style={styles.container}>
           {/* first component */}
@@ -69,13 +46,31 @@ class LookingFor extends Component {
 
           {/*  second component */}
           <View style={styles.options}>
-          {this.state.optionList.map(r => <TouchableOpacity style={styles.selectButton} title={r} value={r}><Text style={{textAlign: 'center', color:'#30467B'}}>{r}</Text></TouchableOpacity>)} 
+          {this.state.optionList.map((r, index) => <TouchableOpacity 
+          key={index} 
+          id={r} 
+          onPress={() => {
+              console.log(r); 
+              this.setState({pressed: true});
+            //   document.getElementById(index).style.backgroundColor="black"
+          }} key={r} style={[
+              styles.selectButton, 
+              this.state.pressed ? styles[`selectButton${index}`] : {}]} key={r} title={r} value={r}><Text style={[
+                styles.selectButtonText, 
+                this.state.pressed ? {color:'white'}: {}]}>{r}</Text></TouchableOpacity>)} 
           </View>
+          
+          {/* <View style={{ position: "absolute", bottom: 0, right: 10 }}> */}
+          {/* <Icon
+  name="rowing" /> */}
+        {/* </View> */}
       </SafeAreaView>
     );
-  }
+}
+//   }
 }
 const styles = StyleSheet.create({
+    selectButtonText:{textAlign: 'center', color:'#30467B'},
     container:{
         display: 'flex',
         flexDirection: 'column',
@@ -119,6 +114,110 @@ const styles = StyleSheet.create({
         paddingRight: 10,
         textAlign: 'center',
         margin: 5,
-    }
+    },
+    selectButton0:{
+        width: 163,
+        borderWidth: 1.3,
+        borderRadius: 50,
+        borderStyle: 'solid',
+        borderColor: '#7F5AF0',
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        textAlign: 'center',
+        margin: 5,
+        backgroundColor: '#7F5AF0',
+        color:'white'
+    },
+    selectButton1:{
+        width: 163,
+        borderWidth: 1.3,
+        borderRadius: 50,
+        borderStyle: 'solid',
+        borderColor: '#7F5AF0',
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        textAlign: 'center',
+        margin: 5,
+        backgroundColor: '#7F5AF0',
+        color:'white'
+    },
+    selectButton2:{
+        width: 163,
+        borderWidth: 1.3,
+        borderRadius: 50,
+        borderStyle: 'solid',
+        borderColor: '#7F5AF0',
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        textAlign: 'center',
+        margin: 5,
+        backgroundColor: '#7F5AF0',
+        color:'white'
+    },
+    selectButton3:{
+        width: 163,
+        borderWidth: 1.3,
+        borderRadius: 50,
+        borderStyle: 'solid',
+        borderColor: '#7F5AF0',
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        textAlign: 'center',
+        margin: 5,
+        backgroundColor: '#7F5AF0',
+        color:'white'
+    },
+    selectButton4:{
+        width: 163,
+        borderWidth: 1.3,
+        borderRadius: 50,
+        borderStyle: 'solid',
+        borderColor: '#7F5AF0',
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        textAlign: 'center',
+        margin: 5,
+        backgroundColor: '#7F5AF0',
+        color:'white'
+    },
+    selectButton5:{
+        width: 163,
+        borderWidth: 1.3,
+        borderRadius: 50,
+        borderStyle: 'solid',
+        borderColor: '#7F5AF0',
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        textAlign: 'center',
+        margin: 5,
+        backgroundColor: '#7F5AF0',
+        color:'white'
+    },
+    selectButton6:{
+        width: 163,
+        borderWidth: 1.3,
+        borderRadius: 50,
+        borderStyle: 'solid',
+        borderColor: '#7F5AF0',
+        padding: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        textAlign: 'center',
+        margin: 5,
+        backgroundColor: '#7F5AF0',
+        color:'white'
+    },
+    btnPress: {
+        borderColor: 'blue',
+        borderWidth: 1,
+        height: 30,
+        width: 100,
+      }
 });
 export default LookingFor;

@@ -84,8 +84,8 @@ class AddUserScreen extends Component {
     return (
       <View style={styles.container}>
         <Text style={styles.TopicTitle}>Stay in the loop.</Text>
-        <TouchableOpacity style={styles.button2}>
-      <Text style={{color: '#30467B', textAlign: 'center', fontSize: 20}} onPress={() => this.enableNotifs()}>Enable Notifications</Text>
+        <TouchableOpacity style={styles.button2} onPress={() => this.enableNotifs()}>
+      <Text style={{color: '#30467B', textAlign: 'center', fontSize: 20}}>Enable Notifications</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button3}>
       <Text style={{color: 'black', textAlign: 'center', fontSize: 20}} onPress={() => this.setModalVisible()}>Disable Notifications</Text>
