@@ -41,12 +41,12 @@ render(){
 
         {/* bottom Container*/}
         <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.signin}>
+          <TouchableOpacity style={styles.signin} onPress={() => this.props.navigation.navigate('EmailSignUp')}>
           {/* <Icon
           style={{marginRight: 20, padding: 0,height: 20, width: 25 }}
             color= 'white'
           name='email' />  */}
-            <Text style={styles.signinText} onPress={() => this.props.navigation.navigate('EmailSignUp')}>SIGN UP WITH EMAIL</Text>
+            <Text style={styles.signinText} >SIGN UP WITH EMAIL</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.signin}>
           {/* <Icon

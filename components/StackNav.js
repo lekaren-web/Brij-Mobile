@@ -8,6 +8,12 @@ import Verified from './Verified';
 import Notifs from './Notifs';
 import IamA from './IamA'
 import LookingFor from './LookingFor'
+import Myname from './Myname'
+import Mybirthday from './Mybirthday'
+import MyLocation from './MyLocation'
+import MyProfile from './MyProfile'
+import Explore from './Explore'
+import Message from './Message'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 const StackNav = () => {
@@ -55,6 +61,36 @@ const StackNav = () => {
         name="LookingFor"
         component={LookingFor}
         options={{title: 'LookingFor', headerShown: false}}
+      />
+      <Stack.Screen
+        name="Myname"
+        component={Myname}
+        options={{title: 'Myname', headerShown: false}}
+      />
+      <Stack.Screen
+        name="Mybirthday"
+        component={Mybirthday}
+        options={{title: 'Mybirthday', headerShown: false}}
+      />
+      <Stack.Screen
+        name="MyLocation"
+        component={MyLocation}
+        options={{title: 'MyLocation', headerShown: false}}
+      />
+      <Stack.Screen
+        name="MyProfile"
+        component={MyProfile}
+        options={{title: 'MyProfile', headerShown: false}}
+      />
+      <Stack.Screen
+        name="Explore"
+        component={Explore}
+        options={{title: 'Explore', headerShown: false}}
+      />
+      <Stack.Screen
+        name="Message"
+        component={Message}
+        options={{title: 'Message', headerShown: false}}
       />
     </Stack.Navigator>
   );

@@ -28,7 +28,7 @@ import {
 // import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 // console.log('auth', auth());
 // console.log('getAuth', getAuth);
-class AddUserScreen extends Component {
+class EmailVerify extends Component {
   constructor() {
     super();
     // this.dbRef = firebase.firestore().collection("users");
@@ -204,6 +204,8 @@ class AddUserScreen extends Component {
           {/* <Text style={{fontSize: 20,  marginBottom: 50, color: '#30467BCC'}}>We will be sending you a verification code.</Text> */}
           <View style={styles.inputGroup}>
           <TextInput
+          keyboardType='number-pad'
+          textContentType='oneTimeCode'
         style={{borderStyle: 'solid', borderColor: '#30467B99', height: 40, borderBottomWidth: 1, width:'100%', marginTop: 40}}
         // onChangeText={onChangeText}
         placeholder='_ _ _ _ _ _'
@@ -330,4 +332,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-export default AddUserScreen;
+export default EmailVerify;

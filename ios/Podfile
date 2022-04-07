@@ -19,7 +19,13 @@ target 'brij_mobile' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+
+
+
+
+
+
 
   target 'brij_mobileTests' do
     inherit! :complete

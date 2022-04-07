@@ -22,7 +22,7 @@ import {
 // import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 // console.log('auth', auth());
 // console.log('getAuth', getAuth);
-class AddUserScreen extends Component {
+class Notifs extends Component {
   constructor() {
     super();
     this.state = {
@@ -273,4 +273,4 @@ const styles = StyleSheet.create({
     textAlign: "center"
   }
 });
-export default AddUserScreen;
+export default Notifs;

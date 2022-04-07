@@ -22,16 +22,16 @@ import {
 // console.log('auth', auth());
 // console.log('getAuth', getAuth);
 
-class AddUserScreen extends Component {
+class IamA extends Component {
   constructor() {
     super();
     this.state = {
-      backgroundColorMentor:'#7F5AF0',
-      colorMentor: 'white',
-      backgroundColorMentee:'#7F5AF0',
-      colorMentee: 'white',
-      backgroundColorBoth:'#7F5AF0',
-      colorBoth: 'white',
+      backgroundColorMentor:'transparent',
+      colorMentor: '#7F5AF0',
+      backgroundColorMentee:'transparent',
+      colorMentee: '#7F5AF0',
+      backgroundColorBoth:'transparent',
+      colorBoth: '#7F5AF0',
       mobile: "",
       currentUser: "",
       user: "",
@@ -75,20 +75,21 @@ class AddUserScreen extends Component {
     if(this.state.mentor && !this.state.mentee){
         this.setState({backgroundColorMentor : '#D9CEFB', colorMentor : '#7F5AF0'})
     } else if(!this.state.mentor) {
-        this.setState({backgroundColorMentor : '#7F5AF0', colorMentor : 'white'})
+        this.setState({backgroundColorMentor : 'transparent', colorMentor : '#7F5AF0'})
     }
     if(this.state.mentee  && !this.state.mentor){
         this.setState({backgroundColorMentee : '#D9CEFB', colorMentee : '#7F5AF0'})
     }else if (!this.state.mentee){
-        this.setState({backgroundColorMentee : '#7F5AF0', colorMentee : 'white'})
+        this.setState({backgroundColorMentee : 'transparent', colorMentee : '#7F5AF0'})
     }
 
     if(this.state.mentor && this.state.mentee){
         this.setState({backgroundColorBoth : '#D9CEFB', colorBoth : '#7F5AF0'})
-        this.setState({backgroundColorMentee : '#7F5AF0', colorMentee : 'white'})
-        this.setState({backgroundColorMentor : '#7F5AF0', colorMentor : 'white'})
-    }else if (!this.state.mentor && !this.state.mentee) {
-        this.setState({backgroundColorBoth : '#7F5AF0', colorBoth : 'white'})
+        this.setState({backgroundColorMentee : 'transparent', colorMentee : '#7F5AF0'})
+        this.setState({backgroundColorMentor : 'transparent', colorMentor : '#7F5AF0'})
+    }
+    if (!this.state.mentor && !this.state.mentee) {
+        this.setState({backgroundColorBoth : 'transparent', colorBoth : '#7F5AF0'})
     }
 
 
@@ -113,9 +114,11 @@ class AddUserScreen extends Component {
             width: '100%',
             alignSelf:'center',
             justifyContent: 'center',
-            padding: 10,
+            padding: 13,
             marginTop: '5%',
-            color: this.state.colorMentor
+            color: this.state.colorMentor,
+            borderWidth: 1,
+            borderColor:'#7F5AF0'
             }} onPress={() => {this.state.mentor= !this.state.mentor, this.state.mentee= false, this.editMM()}}>
       <Text style={{color: this.state.colorMentor, textAlign: 'center', fontSize: 20, fontWeight: '700'}} >mentor</Text>
       </TouchableOpacity>
@@ -126,9 +129,11 @@ class AddUserScreen extends Component {
            width: '100%',
            alignSelf:'center',
            justifyContent: 'center',
-           padding: 10,
+           padding: 13,
            marginTop: '5%',
-           color: this.state.colorMentee
+           color: this.state.colorMentee,
+           borderWidth: 1,
+           borderColor:'#7F5AF0'
       }} onPress={() => {this.state.mentee= !this.state.mentee, this.state.mentor= false, this.editMM()}}>
       <Text style={{color: this.state.colorMentee, textAlign: 'center', fontSize: 20,fontWeight: '700'}}>mentee</Text>
       </TouchableOpacity>
@@ -139,9 +144,11 @@ class AddUserScreen extends Component {
            width: '100%',
            alignSelf:'center',
            justifyContent: 'center',
-           padding: 10,
+           padding: 13,
            marginTop: '5%',
-           color: this.state.colorBoth
+           color: this.state.colorBoth,
+           borderWidth: 1,
+           borderColor:'#7F5AF0'
       }}
       onPress={() => {this.state.mentee= true, this.state.mentor= true, this.editMM()}} 
       >
@@ -240,4 +247,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-export default AddUserScreen;
+export default IamA;

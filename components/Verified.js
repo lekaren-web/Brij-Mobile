@@ -28,7 +28,7 @@ import {
 // import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 // console.log('auth', auth());
 // console.log('getAuth', getAuth);
-class AddUserScreen extends Component {
+class Verified extends Component {
   constructor() {
     super();
     // this.dbRef = firebase.firestore().collection("users");
@@ -255,4 +255,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
-export default AddUserScreen;
+export default Verified;
