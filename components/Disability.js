@@ -13,67 +13,32 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 import Option from './option';
+import CheckBox from '@react-native-community/checkbox';
 import {
   SelectMultipleButton,
   SelectMultipleGroupButton,
 } from 'react-native-selectmultiple-button';
-const LookingFor = props => {
-  // constructor(props) {
-  // super(props);
-  const [pressed, setpressed] = useState(false);
-  const optionList1 = [
-    'Goal Setting',
-    'Career Mapping',
-    'Resume Review',
-    'Portfolio Creation',
-  ];
-  const optionList2 = ['Interview Tips', 'Project Advice', 'Networking Advice'];
-  //   constructor() {
-  //     super();
 
-  //   }
-  // componentDidMount(){
-  const [user, setUser] = useState(props.route.params);
-  const [arr, setArr] = useState([])
-  //   // console.log(props.route.params)
-  // }
+const Disability = props => {
+  const [disabilityVisible, setdisabilityVisible] = useState(false);
+  const [disability, setdisability] = useState([{value: 'Yes'}, {value: 'No'}]);
+  const [yesNo, setYesNo] = useState(false);
 
-  // render() {
-  //     if (state.isLoading) {
-  //       return (
-  //         <View style={styles.preloader}>
-  //           <ActivityIndicator size="large" color="#9E9E9E" />
-  //         </View>
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedIndexes, setSelectedIndexes] = useState([]);
-  const [selectedIndex2, setSelectedIndex2] = useState(0);
-  const [selectedIndexes2, setSelectedIndexes2] = useState([]);
   return (
     <SafeAreaView style={styles.container}>
       <View style={{height: '100%'}}>
-        {/* first component */}
         <View style={styles.component1}>
-          <Text style={styles.headerText}>I am looking for</Text>
-          <Text style={styles.subText}>Pick up to 3 options.</Text>
+          <Text style={styles.headerText}>Do I have a disability?</Text>
         </View>
 
-        {/*  second component */}
         <View style={styles.options}>
           <SelectMultipleGroupButton
-            multiple={true}
-            group={[
-              {value: 'Goal Setting'},
-              {value: 'Career Mapping'},
-              {value: 'Resume Review'},
-              {value: 'Portfolio Creation'},
-              {value: 'Interview Tips'},
-              {value: 'Project Advice'},
-              {value: 'Networking Advice'},
-            ]}
-            defaultSelectedIndexes={[0]}
+            multiple={false}
+            group={disability}
+            defaultSelectedIndex={[1]}
             textStyle={{fontSize: 18, textAlign: 'center'}}
             buttonViewStyle={{
               alignItems: 'flex-start',
@@ -81,7 +46,10 @@ const LookingFor = props => {
               borderRadius: 27,
               borderColor: '#7F5AF0',
               textAlign: 'center',
-              margin: 5
+              margin: 5,
+              width: '80%',
+              alignItems: 'center',
+              padding: 5,
             }}
             highLightStyle={{
               textColor: '#30467B',
@@ -94,19 +62,50 @@ const LookingFor = props => {
               borderTintColor: 'transparent',
               textTintColor: 'white',
               backgroundTintColor: '#7F5AF0',
+              alignItems: 'center',
             }}
             containerViewStyle={{
               width: '100%',
-              justifyContent: 'space-between',
+              justifyContent: 'center',
               alignContent: 'center',
+              textAlign: 'center',
+              alignItems: 'center',
             }}
             onSelectedValuesChange={selectedValues =>
-              setArr(selectedValues)
-              // this._groupButtonOnSelectedValuesChange(selectedValues)
+              setYesNo(selectedValues.toString())
             }
           />
         </View>
 
+        <View style={styles.checkboxContainer}>
+          <View
+            style={{
+              borderWidth: 1,
+              borderColor: '#000',
+              height: 22,
+              width: 22,
+              borderRadius: 5,
+              marginRight: 10
+            }}>
+            <CheckBox
+              hideBox
+              checked={disabilityVisible}
+              onPress={() => {
+                setdisabilityVisible(!disabilityVisible);
+              }}
+              style={{height: 20, width: 20}}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#30467B',
+              marginBottom: 3,
+            }}>
+            Visible on profile
+          </Text>
+        </View>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
           <IconButton
             style={{backgroundColor: 'lightgray', width: 80, height: 45}}
@@ -114,9 +113,10 @@ const LookingFor = props => {
             color={Colors.white}
             size={40}
             onPress={() => {
-              //   uncomment the alert when data is connected
-              // alert('Please select at least 3');
-              props.navigation.navigate('Myname', {enableNotifs: props.route.params.enableNotifs, mentor: props.route.params.mentor,  mentee: props.route.params.mentee,  both: props.route.params.both, lookingFor: arr});
+              props.route.params.disability = disability;
+              props.route.params.disabilityVisible = disabilityVisible;
+              // console.log(props.route.params);
+              props.navigation.navigate('Myethnicity', props.route.params);
             }}
           />
         </View>
@@ -128,6 +128,19 @@ const LookingFor = props => {
 // }
 const styles = StyleSheet.create({
   selectButtonText: {textAlign: 'center', color: '#30467B'},
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    marginTop: 220,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+  },
+  checkbox: {
+    alignSelf: 'center',
+  },
+  label: {
+    margin: 8,
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -136,6 +149,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     padding: 10,
     margin: 20,
+    height: '100%',
   },
   component1: {
     display: 'flex',
@@ -154,11 +168,10 @@ const styles = StyleSheet.create({
   },
   options: {
     display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
     alignContent: 'center',
-    justifyContent: 'space-between',
-    marginTop: 50,
+    justifyContent: 'center',
+    marginTop: 70,
   },
 
   btnPress: {
@@ -180,4 +193,4 @@ const styles = StyleSheet.create({
     margin: 5,
   },
 });
-export default LookingFor;
+export default Disability;

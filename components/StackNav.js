@@ -14,6 +14,11 @@ import MyLocation from './MyLocation'
 import MyProfile from './MyProfile'
 import Explore from './Explore'
 import Message from './Message'
+import SignIn from './SignIn'
+import Mygender from './Mygender'
+import Disability from './Disability'
+import Myethnicity from './Myethnicity'
+import Mysexuality from './Mysexuality'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 const StackNav = () => {
@@ -48,6 +53,11 @@ const StackNav = () => {
         options={{title: 'Verified', headerShown: false}}
       />
       <Stack.Screen
+        name="SignIn"
+        component={SignIn}
+        options={{title: 'SignIn', headerShown: false}}
+      />
+      <Stack.Screen
         name="Notifs"
         component={Notifs}
         options={{title: 'Notifs', headerShown: false}}
@@ -76,6 +86,26 @@ const StackNav = () => {
         name="MyLocation"
         component={MyLocation}
         options={{title: 'MyLocation', headerShown: false}}
+      />
+      <Stack.Screen
+        name="Mygender"
+        component={Mygender}
+        options={{title: 'Mygender', headerShown: false}}
+      />
+      <Stack.Screen
+        name="Disability"
+        component={Disability}
+        options={{title: 'Disability', headerShown: false}}
+      />
+      <Stack.Screen
+        name="Myethnicity"
+        component={Myethnicity}
+        options={{title: 'Myethnicity', headerShown: false}}
+      />
+      <Stack.Screen
+        name="Mysexuality"
+        component={Mysexuality}
+        options={{title: 'Mysexuality', headerShown: false}}
       />
       <Stack.Screen
         name="MyProfile"

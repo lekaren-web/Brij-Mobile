@@ -1,0 +1,15 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-brij-staging-142152-authRole",
+      "UnauthRoleArn": "arn:aws:iam::438456042666:role/amplify-brij-staging-142152-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::438456042666:role/amplify-brij-staging-142152-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-brij-staging-142152-deployment",
+      "UnauthRoleName": "amplify-brij-staging-142152-unauthRole",
+      "StackName": "amplify-brij-staging-142152",
+      "StackId": "arn:aws:cloudformation:us-east-1:438456042666:stack/amplify-brij-staging-142152/125f9030-b67e-11ec-a951-0e954bb76271",
+      "AmplifyAppId": "dwh7fjr8k221f"
+    }
+  }
+}

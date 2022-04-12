@@ -30,7 +30,7 @@ import {Auth} from 'aws-amplify';
 // import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 // console.log('auth', auth());
 // console.log('getAuth', getAuth);
-class SignUpEmail extends Component {
+class SignIn extends Component {
   constructor() {
     super();
     // this.dbRef = firebase.firestore().collection("users");
@@ -66,42 +66,11 @@ class SignUpEmail extends Component {
     );
   }
 
-  componentDidUpdate() {
-    if (this.keyboardStatus == true) {
-    }
-  }
 
-  componentWillUnmount() {
-    this.keyboardDidShowSubscription.remove();
-    this.keyboardDidHideSubscription.remove();
-  }
-
-  inputValueUpdate = (val, prop) => {
-    const state = this.state;
-    state[prop] = val;
-    this.setState(state);
-  };
-  async storeUser() {
-    if (this.state.re_enter_password !== this.state.password) {
-      this.setState({
-        errorMessage: 'Password and Re-entered password do not match',
-      });
-    } else if (this.state.re_enter_password === this.state.password) {
-      
-      if (this.state.password.length < 8) {
-        this.setState({errorMessage: 'Your password must be at least 8 characters'});
-      }
-      if (this.state.password.search(/[a-z]/i) < 0) {
-        this.setState({errorMessage:'Your password must contain at least one letter.'});
-      }
-      if (this.state.password.search(/[0-9]/) < 0) {
-        this.setState({errorMessage:'Your password must contain at least one digit.'});
-      }
-      else {
-
-      this.setState({errorMessage: ''});
+  async signIn() {
+    
       try {
-        const {user} = await Auth.signUp({
+        const {user} = await Auth.signIn({
           username: this.state.email,
           password: this.state.password,
           // attributes: {
@@ -110,14 +79,13 @@ class SignUpEmail extends Component {
           //     // other custom attributes
           // }
         })
-        Amplify.Auth.rememberDevice()
-        this.props.navigation.navigate('EmailVerify', {username: this.state.email, password: this.state.password})
+        
+        // await Amplify.Auth.rememberDevice()
+        this.props.navigation.navigate('MyProfile')
       } catch (error) {
         alert(error);
       }
-    }
 
-    }
 
     // this.props.navigation.navigate("EmailVerify")
   }
@@ -132,26 +100,12 @@ class SignUpEmail extends Component {
     }
 
     return (
-      // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.container}>
-        {
-          /* <RadialGradient
-          colors={["red", "#00ff00", "blue"]}
-          stops={[0, 0.5, 1]}
-          image={
-            <ImageBackgroundPlaceholder style={this.state.imageStyle}>
-              /* your content here */
-          // </ImageBackgroundPlaceholder>
-        }
-        {/* />  */}
+      <SafeAreaView>
+          <View style={styles.container}>
         <View style={{margin: 10}}>
-          <Text style={styles.TopicTitle}>Sign Up</Text>
-          <Text style={{color: '#8390B0', marginBottom: 30}}>
-            Create an account to start matching with creatives.
-          </Text>
+          <Text style={styles.TopicTitle}>Welcome back!</Text>
         </View>
 
-        {/* <Text style={{fontSize: 20,  marginBottom: 50, color: '#30467BCC'}}>We will be sending you a verification code.</Text> */}
         <View style={styles.inputGroup}>
           <Input
             label="Email"
@@ -173,10 +127,8 @@ class SignUpEmail extends Component {
           />
 
           <Input
-          errorMessage={this.state.errorMessage}
             label="Password"
             returnKeyType="next"
-            errorStyle={{color: 'red'}}
             secureTextEntry={true}
             value={this.state.password}
             onChangeText={val => this.setState({password: val})}
@@ -192,25 +144,10 @@ class SignUpEmail extends Component {
             // value={text}
           />
 
-          <Input
-            secureTextEntry={true}
-            errorStyle={{color: 'red'}}
-            errorMessage={this.state.errorMessage}
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: 'rgba(48, 70, 123, 0.6)',
-              borderStyle: 'solid',
-            }}
-            placeholder={'*********'}
-            value={this.re_enter_password}
-            label="Re-enter Password"
-            onChangeText={val => this.setState({re_enter_password: val})}
-          />
-
           {/* <KeyboardAvoidingView behavior="" > */}
           <TouchableOpacity
             style={styles.button1}
-            onPress={() => this.storeUser()}>
+            onPress={() => this.signIn()}>
             <Text
               style={{
                 color: 'white',
@@ -218,20 +155,21 @@ class SignUpEmail extends Component {
                 textAlign: 'center',
                 fontSize: 20,
               }}>
-              SIGN UP
+              LOGIN
             </Text>
           </TouchableOpacity>
 
           <Text style={{color: '#30467B', top: 120}}>
-            Already have an account?
+          Don’t have an account yet?
           </Text>
 
           <Text
             style={{color: '#30467B', fontWeight: 'bold', top: 120}}
-            onPress={() => this.props.navigation.navigate('Login')}>
-            Login
+            onPress={() => this.props.navigation.navigate('SignUp')}>
+            Sign up
           </Text>
           {/* </KeyboardAvoidingView> */}
+        </View>
         </View>
       </SafeAreaView>
       // </TouchableWithoutFeedback>
@@ -247,30 +185,31 @@ const styles = StyleSheet.create({
   },
   button1: {
     // position: "absolute",
-    top: 100,
+    top: 120,
     backgroundColor: '#7F5AF0',
     width: '90%',
     alignSelf: 'center',
     justifyContent: 'center',
     padding: 13,
     borderRadius: 50,
-    marginBottom: 10,
+    marginBottom: 30,
   },
   TopicTitle: {
-    width: '70%',
-    fontSize: 45,
-    marginBottom: 15,
+    width: '100%',
+    fontSize: 36,
+    marginBottom: '30%',
     fontWeight: 'bold',
     color: '#30467B',
     marginTop: '25%',
   },
   container: {
     display: 'flex',
-    flex: 1,
-    height: '100%',
     alignSelf: 'center',
     flexDirection: 'column',
-    justifyContent: 'center',
+    width: '90%',
+    height: '100%',
+    margin: 20,
+    marginTop: '20%'
   },
   inputGroup: {
     flex: 1,
@@ -289,4 +228,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-export default SignUpEmail;
+export default SignIn;

@@ -1,7 +1,6 @@
 // screens/AddUserScreen.js
-import React, { Component } from "react";
-import { IconButton, Colors } from "react-native-paper";
-import { db } from "../database/firebaseDb";
+import React, {Component, useState} from 'react';
+import {IconButton, Colors} from 'react-native-paper';
 import {
   Button,
   StyleSheet,
@@ -10,222 +9,241 @@ import {
   ActivityIndicator,
   View,
   Text,
-  TouchableOpacity
-} from "react-native";
+  TouchableOpacity,
+} from 'react-native';
 
+const IamA = props => {
+  let [setMentor] = useState();
+  let [setMentee] = useState();
+  let [setBoth] = useState();
+  let mentor = false;
+  let mentee = false;
+  let both = false;
 
+  let [backgroundColorMentor, setbackgroundColorMentor] =
+    useState('transparent');
+  let [colorMentor, setcolorMentor] = useState('#7F5AF0');
 
+  let [backgroundColorMentee, setbackgroundColorMentee] =
+    useState('transparent');
+  let [colorMentee, setcolorMentee] = useState('#7F5AF0');
 
-// import { auth } from "firebase";
-// import * as fb from "firebase";
-// import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
-// console.log('auth', auth());
-// console.log('getAuth', getAuth);
+  let [backgroundColorBoth, setbackgroundColorBoth] = useState('transparent');
+  let [colorBoth, setcolorBoth] = useState('#7F5AF0');
 
-class IamA extends Component {
-  constructor() {
-    super();
-    this.state = {
-      backgroundColorMentor:'transparent',
-      colorMentor: '#7F5AF0',
-      backgroundColorMentee:'transparent',
-      colorMentee: '#7F5AF0',
-      backgroundColorBoth:'transparent',
-      colorBoth: '#7F5AF0',
-      mobile: "",
-      currentUser: "",
-      user: "",
-      isLoading: false,
-      name: "",
-      email: "",
-      password: "",
-      verified: false,
-      enableNotifs: false,
-      mentor: false,
-      mentee: false,
-      lookingFor: [], //array of string values from frontend
-      mobile: "",
-      birthday: "",
-      age: "",
-      location: "",
-      gender: "",
-      disability: [], //array of string values from frontend
-      disabilityVisible: false,
-      ethnicity: [], //array of string values from frontend
-      ethnicityVisible: false,
-      sexuality: [], //array of string values from frontend
-      sexualityVisible: false,
-      addPhotos: [], //array of objects: {}
-      myPhotos: [],
-      aboutMe: "", //bio,
-      myInterests: [], //array of string values
-      testimonials: [], // TBD
-      industry: [], //array of strings
-      occupation: [], //array of strings
-      education: [], //array of objects {schoolName:"", GradYear: "", ...etc}
-      YearsOfExperience: "",
-      VaccinationStatus: 0, // number that maps to value in array
-    };
-  }
+ const [select , setSelect] = useState(false)
+ const [ user , setUser ] = useState({})
+  // number that maps to value in array
 
-  async componentDidMount() {
-  }
+  // async componentDidMount() {
+  //   console.log(props.route.params)
+  // }
 
-  async editMM(val){
-    if(this.state.mentor && !this.state.mentee){
-        this.setState({backgroundColorMentor : '#D9CEFB', colorMentor : '#7F5AF0'})
-    } else if(!this.state.mentor) {
-        this.setState({backgroundColorMentor : 'transparent', colorMentor : '#7F5AF0'})
+  const editMM = val => {
+    switch (val) {
+      case 'mentor':
+        mentor = true;
+        mentee = false;
+        both = false;
+        setUser({mentor: mentor, mentee: mentee, both: both, enableNotifs: props.route.params.enableNotifs})
+        setSelect(true)
+        setbackgroundColorMentor('#7F5AF0'), setcolorMentor('white');
+        setbackgroundColorMentee('transparent'), setcolorMentee('#7F5AF0');
+        setbackgroundColorBoth('transparent'), setcolorBoth('#7F5AF0');
+        
+        break;
+      case 'mentee':
+        mentee = true;
+        mentor = false;
+        both = false;
+        setUser({mentor: mentor, mentee: mentee, both: both, enableNotifs: props.route.params.enableNotifs})
+        setSelect(true)
+        setbackgroundColorMentee('#7F5AF0'), setcolorMentee('white');
+        setbackgroundColorMentor('transparent'), setcolorMentor('#7F5AF0');
+        setbackgroundColorBoth('transparent'), setcolorBoth('#7F5AF0');
+
+        break;
+      case 'both':
+        both = true;
+        mentee = false;
+        mentor = false;
+        setUser({mentor: mentor, mentee: mentee, both: both, enableNotifs: props.route.params.enableNotifs})
+        setSelect(true)
+        setbackgroundColorBoth('#7F5AF0'), setcolorBoth('white');
+        setbackgroundColorMentor('transparent'), setcolorMentor('#7F5AF0');
+        setbackgroundColorMentee('transparent'), setcolorMentee('#7F5AF0');
+        break;
+      default:
+        mentor = false;
+        mentee = false;
+        both = false;
+        setUser({mentor: mentor, mentee: mentee, both: both, enableNotifs: props.route.params.enableNotifs})
+        setSelect(false)
+        setbackgroundColorMentee('transparent'), setcolorMentee('#7F5AF0');
+        setbackgroundColorBoth('transparent'), setcolorBoth('#7F5AF0');
+        setbackgroundColorMentor('transparent'), setcolorMentor('#7F5AF0');
     }
-    if(this.state.mentee  && !this.state.mentor){
-        this.setState({backgroundColorMentee : '#D9CEFB', colorMentee : '#7F5AF0'})
-    }else if (!this.state.mentee){
-        this.setState({backgroundColorMentee : 'transparent', colorMentee : '#7F5AF0'})
-    }
-
-    if(this.state.mentor && this.state.mentee){
-        this.setState({backgroundColorBoth : '#D9CEFB', colorBoth : '#7F5AF0'})
-        this.setState({backgroundColorMentee : 'transparent', colorMentee : '#7F5AF0'})
-        this.setState({backgroundColorMentor : 'transparent', colorMentor : '#7F5AF0'})
-    }
-    if (!this.state.mentor && !this.state.mentee) {
-        this.setState({backgroundColorBoth : 'transparent', colorBoth : '#7F5AF0'})
-    }
+  };
 
 
-//   this.props.navigation.navigate("PhoneCodeVerification");
- }
-
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E" />
-        </View>
-      );
-    }
-    return (
-      <View style={styles.container}>
-        <Text style={styles.TopicTitle}>I am a</Text>
-        <TouchableOpacity style={{
-            backgroundColor: this.state.backgroundColorMentor,
-            textAlign:'center',
-            borderRadius: 50,
-            width: '100%',
-            alignSelf:'center',
-            justifyContent: 'center',
-            padding: 13,
-            marginTop: '5%',
-            color: this.state.colorMentor,
-            borderWidth: 1,
-            borderColor:'#7F5AF0'
-            }} onPress={() => {this.state.mentor= !this.state.mentor, this.state.mentee= false, this.editMM()}}>
-      <Text style={{color: this.state.colorMentor, textAlign: 'center', fontSize: 20, fontWeight: '700'}} >mentor</Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.TopicTitle}>I am a</Text>
+      <TouchableOpacity
+        style={{
+          backgroundColor: backgroundColorMentor,
+          textAlign: 'center',
+          borderRadius: 50,
+          width: '100%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          padding: 13,
+          marginTop: '5%',
+          color: colorMentor,
+          borderWidth: 1,
+          borderColor: '#7F5AF0',
+        }}
+        onPress={() => editMM('mentor')}>
+        <Text
+          style={{
+            color: colorMentor,
+            textAlign: 'center',
+            fontSize: 20,
+            fontWeight: '700',
+          }}>
+          mentor
+        </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={{
-           backgroundColor: this.state.backgroundColorMentee,
-           textAlign:'center',
-           borderRadius: 50,
-           width: '100%',
-           alignSelf:'center',
-           justifyContent: 'center',
-           padding: 13,
-           marginTop: '5%',
-           color: this.state.colorMentee,
-           borderWidth: 1,
-           borderColor:'#7F5AF0'
-      }} onPress={() => {this.state.mentee= !this.state.mentee, this.state.mentor= false, this.editMM()}}>
-      <Text style={{color: this.state.colorMentee, textAlign: 'center', fontSize: 20,fontWeight: '700'}}>mentee</Text>
+      <TouchableOpacity
+        style={{
+          backgroundColor: backgroundColorMentee,
+          textAlign: 'center',
+          borderRadius: 50,
+          width: '100%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          padding: 13,
+          marginTop: '5%',
+          color: colorMentee,
+          borderWidth: 1,
+          borderColor: '#7F5AF0',
+        }}
+        onPress={() => editMM('mentee')}>
+        <Text
+          style={{
+            color: colorMentee,
+            textAlign: 'center',
+            fontSize: 20,
+            fontWeight: '700',
+          }}>
+          mentee
+        </Text>
       </TouchableOpacity>
-      <TouchableOpacity style={{
-           backgroundColor: this.state.backgroundColorBoth,
-           textAlign:'center',
-           borderRadius: 50,
-           width: '100%',
-           alignSelf:'center',
-           justifyContent: 'center',
-           padding: 13,
-           marginTop: '5%',
-           color: this.state.colorBoth,
-           borderWidth: 1,
-           borderColor:'#7F5AF0'
-      }}
-      onPress={() => {this.state.mentee= true, this.state.mentor= true, this.editMM()}} 
-      >
-      <Text style={{color: this.state.colorBoth, textAlign: 'center', fontSize: 20, fontWeight: '700'}} >both</Text>
+      <TouchableOpacity
+        style={{
+          backgroundColor: backgroundColorBoth,
+          textAlign: 'center',
+          borderRadius: 50,
+          width: '100%',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          padding: 13,
+          marginTop: '5%',
+          color: colorBoth,
+          borderWidth: 1,
+          borderColor: '#7F5AF0',
+        }}
+        onPress={() => editMM('both')}>
+        <Text
+          style={{
+            color: colorBoth,
+            textAlign: 'center',
+            fontSize: 20,
+            fontWeight: '700',
+          }}>
+          both
+        </Text>
       </TouchableOpacity>
-      <View style={{ position: "absolute", bottom: 26, right: 10 }}>
-          <IconButton
-            style={{ backgroundColor: "lightgray", width: 80, height: 45 }}
-            icon="arrow-right"
-            color={Colors.white}
-            size={40}
-            onPress={() =>{ if(this.state.mentor || this.state.mentee){this.props.navigation.navigate("LookingFor")} else {
-              alert('Please select one')
-            }} }
-          />
-        </View>
+      <View style={{position: 'absolute', bottom: 26, right: 10}}>
+        <IconButton
+          style={{backgroundColor: 'lightgray', width: 80, height: 45}}
+          icon="arrow-right"
+          color={Colors.white}
+          size={40}
+          onPress={() => 
+            {      
+            if (select) {
+              // console.log(props.route.params.enableNotifs)
+              props.navigation.navigate('LookingFor', user);
+            } 
+            if (!select) {
+              alert('Please select one');
+              return;
+            }}
+        }
+        />
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
+// }
 const styles = StyleSheet.create({
-    button:{
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 4,
-        elevation: 3,
-        color: 'white',
-        backgroundColor: 'black',
-    },
-    button2:{
-        textAlign:'center',
-        borderColor: '#7F5AF0', 
-        borderWidth: 1,
-        borderRadius: 50,
-        width: '100%',
-        alignSelf:'center',
-        justifyContent: 'center',
-        padding: 15,
-        marginTop: '5%',
-        color: 'white'
-      },
-      button3:{
-        textAlign:'center',
-        borderColor: '#7F5AF0', 
-        backgroundColor:'transparent',
-        borderWidth: 1,
-        borderRadius: 50,
-        width: '100%',
-        alignSelf:'center',
-        justifyContent: 'center',
-        padding: 15,
-        marginTop: 20,
-        color: 'black',
-      },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 4,
+    elevation: 3,
+    color: 'white',
+    backgroundColor: 'black',
+  },
+  button2: {
+    textAlign: 'center',
+    borderColor: '#7F5AF0',
+    borderWidth: 1,
+    borderRadius: 50,
+    width: '100%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    marginTop: '5%',
+    color: 'white',
+  },
+  button3: {
+    textAlign: 'center',
+    borderColor: '#7F5AF0',
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderRadius: 50,
+    width: '100%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    marginTop: 20,
+    color: 'black',
+  },
   inputGroup: {
-    backgroundColor: "#30467B",
+    backgroundColor: '#30467B',
   },
   TopicTitle: {
-    width: "100%",
-    fontSize:40,
+    width: '100%',
+    fontSize: 40,
     marginBottom: 70,
-    fontWeight: "bold",
-    color: "#30467B",
+    fontWeight: 'bold',
+    color: '#30467B',
   },
   TopicTitle2: {
-    width: "100%",
-    fontSize:40,
+    width: '100%',
+    fontSize: 40,
     marginBottom: 40,
-    fontWeight: "bold",
-    color: "#30467B",
+    fontWeight: 'bold',
+    color: '#30467B',
   },
   container: {
     flex: 1,
     padding: 35,
-    height: "100%",
+    height: '100%',
     // alignSelf: "center"
     // justifyContent: "center"
     paddingTop: 200,
@@ -242,9 +260,9 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    position: "absolute",
-    alignItems: "center",
-    justifyContent: "center",
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 export default IamA;

@@ -1,5 +1,5 @@
 // screens/AddUserScreen.js
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { IconButton, Colors } from "react-native-paper";
 import { db } from "../database/firebaseDb";
 import {
@@ -15,21 +15,14 @@ import {
 } from "react-native";
 ;
 
-class Myname extends Component {
-  constructor() {
-    super();
-  this.state = {}
-//   this.props.navigation.navigate("PhoneCodeVerification");
- }
+const Myname = (props) => {
 
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E" />
-        </View>
-      );
-    }
+  const [name, setName] = useState('')
+
+//  componentDidMount(){
+//    console.log('GOT!!!', this.props.route.params)
+//  }
+
     return (
       <SafeAreaView>
         <View style={styles.container}>
@@ -37,6 +30,8 @@ class Myname extends Component {
             <TextInput
             style={styles.input}
             placeholder="Please insert your name"
+            value={name}
+            onChangeText={(val) => setName(val)}
             >
             </TextInput>
             <View style={{position: 'absolute', bottom:'7%', right: 0}}>
@@ -48,7 +43,9 @@ class Myname extends Component {
               onPress={() => {
                 //   uncomment the alert when data is connected
                 // alert('Please insert your name before continuing');
-                this.props.navigation.navigate("Mybirthday")
+                // props.navigation.navigate("Mybirthday" )
+                props.route.params.name = name
+                props.navigation.navigate("Mybirthday", props.route.params )
               }}
             />
           </View>
@@ -56,7 +53,7 @@ class Myname extends Component {
       </SafeAreaView>
     );
   }
-}
+// }
 const styles = StyleSheet.create({
     container:{
         display: 'flex',

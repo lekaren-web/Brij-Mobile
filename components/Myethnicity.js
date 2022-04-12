@@ -19,69 +19,44 @@ import {
   SelectMultipleButton,
   SelectMultipleGroupButton,
 } from 'react-native-selectmultiple-button';
-const LookingFor = props => {
-  // constructor(props) {
-  // super(props);
-  const [pressed, setpressed] = useState(false);
-  const optionList1 = [
-    'Goal Setting',
-    'Career Mapping',
-    'Resume Review',
-    'Portfolio Creation',
-  ];
-  const optionList2 = ['Interview Tips', 'Project Advice', 'Networking Advice'];
-  //   constructor() {
-  //     super();
+import CheckBox from '@react-native-community/checkbox';
+const Myethnicity = props => {
 
-  //   }
-  // componentDidMount(){
-  const [user, setUser] = useState(props.route.params);
-  const [arr, setArr] = useState([])
-  //   // console.log(props.route.params)
-  // }
-
-  // render() {
-  //     if (state.isLoading) {
-  //       return (
-  //         <View style={styles.preloader}>
-  //           <ActivityIndicator size="large" color="#9E9E9E" />
-  //         </View>
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedIndexes, setSelectedIndexes] = useState([]);
-  const [selectedIndex2, setSelectedIndex2] = useState(0);
-  const [selectedIndexes2, setSelectedIndexes2] = useState([]);
+  const [arr, setArr] = useState([]);
+  const [ethnicityVisible, setethnicityVisible] = useState(false)
   return (
     <SafeAreaView style={styles.container}>
       <View style={{height: '100%'}}>
         {/* first component */}
         <View style={styles.component1}>
-          <Text style={styles.headerText}>I am looking for</Text>
-          <Text style={styles.subText}>Pick up to 3 options.</Text>
-        </View>
+          <Text style={styles.headerText}>My ethnicity is</Text>
+               </View>
 
         {/*  second component */}
         <View style={styles.options}>
           <SelectMultipleGroupButton
             multiple={true}
             group={[
-              {value: 'Goal Setting'},
-              {value: 'Career Mapping'},
-              {value: 'Resume Review'},
-              {value: 'Portfolio Creation'},
-              {value: 'Interview Tips'},
-              {value: 'Project Advice'},
-              {value: 'Networking Advice'},
+              {value: 'Native American'},
+              {value: 'Black/African Descent'},
+              {value: 'East Asian'},
+              {value: 'Hispanic/Latino'},
+              {value: 'Middle Eastern'},
+              {value: 'Pacific Inslander'},
+              {value: 'Other'},
+              {value: 'Prefer not to say'},
             ]}
             defaultSelectedIndexes={[0]}
-            textStyle={{fontSize: 18, textAlign: 'center'}}
+            textStyle={{fontSize: 14, textAlign: 'center'}}
             buttonViewStyle={{
-              alignItems: 'flex-start',
+              alignItems: 'center',
               borderWidth: 2,
               borderRadius: 27,
               borderColor: '#7F5AF0',
               textAlign: 'center',
-              margin: 5
+              width: '45%',
+              padding: 0.2,
+
             }}
             highLightStyle={{
               textColor: '#30467B',
@@ -100,13 +75,41 @@ const LookingFor = props => {
               justifyContent: 'space-between',
               alignContent: 'center',
             }}
-            onSelectedValuesChange={selectedValues =>
-              setArr(selectedValues)
+            onSelectedValuesChange={
+              selectedValues => setArr(selectedValues)
               // this._groupButtonOnSelectedValuesChange(selectedValues)
             }
           />
         </View>
-
+        <View style={styles.checkboxContainer}>
+        <View
+            style={{
+              borderWidth: 1,
+              borderColor: '#000',
+              height: 22,
+              width: 22,
+              borderRadius: 5,
+              marginRight: 10
+            }}>
+            <CheckBox
+              hideBox
+              checked={ethnicityVisible}
+              onPress={() => {
+                setethnicityVisible(!ethnicityVisible);
+              }}
+              style={{height: 20, width: 20}}
+            />
+          </View>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+              color: '#30467B',
+              marginBottom: 3,
+            }}>
+            Visible on profile
+          </Text>
+        </View>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
           <IconButton
             style={{backgroundColor: 'lightgray', width: 80, height: 45}}
@@ -116,7 +119,9 @@ const LookingFor = props => {
             onPress={() => {
               //   uncomment the alert when data is connected
               // alert('Please select at least 3');
-              props.navigation.navigate('Myname', {enableNotifs: props.route.params.enableNotifs, mentor: props.route.params.mentor,  mentee: props.route.params.mentee,  both: props.route.params.both, lookingFor: arr});
+              props.route.params.ethnicity = arr
+              props.route.params.ethnicityVisible = ethnicityVisible
+              props.navigation.navigate('Mysexuality', props.route.params)
             }}
           />
         </View>
@@ -128,6 +133,16 @@ const LookingFor = props => {
 // }
 const styles = StyleSheet.create({
   selectButtonText: {textAlign: 'center', color: '#30467B'},
+  checkboxContainer: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    marginTop: '40%',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+  },
+  checkbox: {
+    alignSelf: 'center',
+  },
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -135,7 +150,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     alignContent: 'center',
     padding: 10,
-    margin: 20,
+    margin: 10,
   },
   component1: {
     display: 'flex',
@@ -180,4 +195,4 @@ const styles = StyleSheet.create({
     margin: 5,
   },
 });
-export default LookingFor;
+export default Myethnicity;

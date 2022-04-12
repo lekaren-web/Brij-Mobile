@@ -129,7 +129,11 @@ const Explore = () => {
   //       );
   //     }
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{flex: 1, backgroundColor:'white',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: 'white'}}>
       {/* Top explore nav */}
       <View style={styles.upperNav}>
         {/* profile pic */}
@@ -140,12 +144,12 @@ const Explore = () => {
           />
         </View>
         {/* back to profile button */}
-        <View style={styles.backButton}>
+        <TouchableOpacity style={styles.backButton} onPress={() => this.props.navigation.navigate('MyProfile')}>
           <ImageBackground
             style={{width: '100%', height: '100%'}}
             source={require('../assets/back.png')}
           />
-        </View>
+        </TouchableOpacity>
 
         {/* brij  */}
         <Text style={styles.brij}>brij</Text>
@@ -346,11 +350,12 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '93%',
-    height: '84%',
+    height: '77%',
     marginTop: 10,
     borderRadius: 20,
     overflow: 'hidden',
-    marginBottom: 5,
+    marginBottom: 60,
+    alignContent: 'center'
   },
   footer: {
     display: 'flex',
@@ -363,6 +368,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 5,
+    position: 'absolute',
+    bottom: 15
   },
   forumlogo: {
     width: 30,

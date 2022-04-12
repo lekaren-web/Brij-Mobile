@@ -34,7 +34,7 @@ const Login = ({navigation}) => {
     );
   }
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#7F5AF0'}}>
+    <SafeAreaView style={{ backgroundColor: '#7F5AF0'}}>
       <View styles={{backgroundColor: '#7F5AF0'}}>
         <StatusBar styles={{backgroundColor: '#7F5AF0'}} />
 
@@ -81,7 +81,7 @@ const Login = ({navigation}) => {
 
             <TouchableOpacity
               style={styles.signin}
-              onPress={() => navigation.navigate('Explore')}>
+              onPress={() => navigation.navigate('Notifs')}>
               <Text 
               style={styles.signinText}>Sign in</Text>
             </TouchableOpacity>

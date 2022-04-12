@@ -23,43 +23,45 @@ import Tags from 'react-native-tags';
 import SoundCloudLogo from '../assets/soundcloud.png';
 import Spotify from '../assets/spotify.png';
 import insta from '../assets/insta.png';
+import Auth from 'aws-amplify'
 // import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 // import Chevron from 'react-chevron'
-class MyProfile extends Component {
-  constructor() {
-    super();
-    this.state = {
-      isLoading: false,
-      basicslist: [
-        'Industry',
-        'Occupation',
-        'Education',
-        'Years of experience',
-        'Vaccination status',
-        'Gender',
-        'Location',
-      ],
-      accountsList: [
-        {name: 'SoundCloud', logo: SoundCloudLogo, width: 33, height: 33},
-        {name: 'Spotify', logo: Spotify, width: 38, height: 38},
-        {name: 'Instagram', logo: insta, width: 29, height: 29},
-      ],
-      // [photo, setPhoto] : React.useState(null)
-    };
-  }
+const MyProfile = () => {
+  // constructor() {
+  //   super();
+  // this.state = {
+  // isLoading: false,
+  const basicslist = [
+    'Industry',
+    'Occupation',
+    'Education',
+    'Years of experience',
+    'Vaccination status',
+    'Gender',
+    'Location',
+  ];
 
+  const accountsList = [
+      {name: 'SoundCloud', logo: SoundCloudLogo, width: 33, height: 33},
+      {name: 'Spotify', logo: Spotify, width: 38, height: 38},
+      {name: 'Instagram', logo: insta, width: 29, height: 29},
+    ],
+    // [photo, setPhoto] : React.useState(null)
+    // };
+
+   
   setModalVisible = visible => {
-    this.setState({modalVisible: visible});
-  };
+      this.setState({modalVisible: visible});
+    };
 
-  handleChoosePhoto() {
+  chandleChoosePhoto = () => {
     launchImageLibrary({noData: true}, response => {
       // console.log(response);
       if (response) {
         setPhoto(response);
       }
     });
-  }
+  };
   //  handleUploadPhoto(){
   //     fetch(`${SERVER_URL}/api/upload`, {
   //       method: 'POST',
@@ -74,86 +76,86 @@ class MyProfile extends Component {
   //       });
   //   };
 
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E" />
-        </View>
-      );
-    }
+  // render() {
+  //   if (isLoading) {
+  //     return (
+  //       <View style={styles.preloader}>
+  //         <ActivityIndicator size="large" color="#9E9E9E" />
+  //       </View>
+  //     );
+  //   }
 
-    // if (this.state.hasAccount) {
-    return (
-      <SafeAreaView>
-        <ScrollView>
-          <View style={styles.container}>
-            {/* My Photos component */}
-            <View>
-              <Text style={styles.TopicTitle}>My Photos</Text>
-              <View style={styles.outerPhoto}>
-                <View style={styles.topPhotoRow}>
-                  <View style={styles.leftPhoto}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.handleChoosePhoto();
-                      }}>
-                      <ImageBackground
-                        style={styles.bigPhoto}
-                        source={image}
-                        resizeMode="cover"></ImageBackground>
-                    </TouchableOpacity>
-                  </View>
-                  <View style={styles.rightPhotos}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.handleChoosePhoto();
-                      }}
-                      style={styles.rightImage}>
-                      <ImageBackground
-                        style={{width: '100%', height: '100%'}}
-                        source={image2}
-                        resizeMode="cover"></ImageBackground>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.handleChoosePhoto();
-                      }}
-                      style={styles.rightImage}>
-                      <Text style={styles.photoInput}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  {/* third component */}
+  // if (hasAccount) {
+  return (
+    <SafeAreaView>
+      <ScrollView>
+        <View style={styles.container}>
+          {/* My Photos component */}
+          <View>
+            <Text style={styles.TopicTitle}>My Photos</Text>
+            <View style={styles.outerPhoto}>
+              <View style={styles.topPhotoRow}>
+                <View style={styles.leftPhoto}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleChoosePhoto();
+                    }}>
+                    <ImageBackground
+                      style={styles.bigPhoto}
+                      source={image}
+                      resizeMode="cover"></ImageBackground>
+                  </TouchableOpacity>
                 </View>
-                <View style={styles.thirdPhotoComponent}>
+                <View style={styles.rightPhotos}>
                   <TouchableOpacity
                     onPress={() => {
-                      this.handleChoosePhoto();
+                      handleChoosePhoto();
                     }}
-                    style={styles.innerThirdPhoto}>
-                    <Text style={styles.photoInput}>+</Text>
+                    style={styles.rightImage}>
+                    <ImageBackground
+                      style={{width: '100%', height: '100%'}}
+                      source={image2}
+                      resizeMode="cover"></ImageBackground>
                   </TouchableOpacity>
-
                   <TouchableOpacity
                     onPress={() => {
-                      this.handleChoosePhoto();
+                      handleChoosePhoto();
                     }}
-                    style={styles.innerThirdPhoto}>
-                    <Text style={styles.photoInput}>+</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.handleChoosePhoto();
-                    }}
-                    style={styles.innerThirdPhoto}>
+                    style={styles.rightImage}>
                     <Text style={styles.photoInput}>+</Text>
                   </TouchableOpacity>
                 </View>
+
+                {/* third component */}
+              </View>
+              <View style={styles.thirdPhotoComponent}>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleChoosePhoto();
+                  }}
+                  style={styles.innerThirdPhoto}>
+                  <Text style={styles.photoInput}>+</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    handleChoosePhoto();
+                  }}
+                  style={styles.innerThirdPhoto}>
+                  <Text style={styles.photoInput}>+</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    handleChoosePhoto();
+                  }}
+                  style={styles.innerThirdPhoto}>
+                  <Text style={styles.photoInput}>+</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            {/* <View style={{ position: "absolute", bottom: 0, right: 0 }}>
+          </View>
+          {/* <View style={{ position: "absolute", bottom: 0, right: 0 }}>
               <IconButton
                 style={{ backgroundColor: "#7F5AF0", width: 80, height: 45 }}
                 icon="arrow-right"
@@ -165,106 +167,36 @@ class MyProfile extends Component {
               />
             </View> */}
 
-            {/* About me component */}
-            <View style={styles.aboutMe}>
-              <Text style={styles.TopicTitle}>About Me</Text>
-              <Text style={styles.topicDescription}>
-                Tell others what you do.
-              </Text>
-              <TextInput
-                placeholderTextColor="#30467B99"
-                style={styles.aboutMeInput}
-                placeholder="Use this space to give a quick rundown of who you are and what you do."></TextInput>
-            </View>
+          {/* About me component */}
+          <View style={styles.aboutMe}>
+            <Text style={styles.TopicTitle}>About Me</Text>
+            <Text style={styles.topicDescription}>
+              Tell others what you do.
+            </Text>
+            <TextInput
+              multiline
+              placeholderTextColor="#30467B99"
+              style={styles.aboutMeInput}
+              placeholder="Use this space to give a quick rundown of who you are and what you do."></TextInput>
+          </View>
 
-            {/* my interests component */}
+          {/* my interests component */}
 
-            <View style={styles.myInterests}>
-              <Text style={styles.TopicTitle}>My Interests</Text>
-              <Text style={styles.topicDescription}>
-                Share some fun things you enjoy.
-              </Text>
-              {/* input for interest tags */}
+          <View style={styles.myInterests}>
+            <Text style={styles.TopicTitle}>My Interests</Text>
+            <Text style={styles.topicDescription}>
+              Share some fun things you enjoy.
+            </Text>
+            {/* input for interest tags */}
 
-              <ScrollView horizontal={true} style={styles.tagInserts}>
-                <Tags
-                  style={styles.tagContainer}
-                  initialText=""
-                  textInputProps={{
-                    placeholder: 'Share some things you enjoys',
-                  }}
-                  initialTags={['Writing music', 'Producing beats', 'Singing']}
-                  onChangeTags={tags => console.log(tags)}
-                  onTagPress={(index, tagLabel, event, deleted) =>
-                    console.log(
-                      index,
-                      tagLabel,
-                      event,
-                      deleted ? 'deleted' : 'not deleted',
-                    )
-                  }
-                  containerStyle={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexWrap: 'nowrap',
-                    width: '60%',
-                  }}
-                  inputStyle={{backgroundColor: '#E4DFFA'}}
-                  renderTag={({
-                    tag,
-                    index,
-                    onPress,
-                    deleteTagOnPress,
-                    readonly,
-                  }) => (
-                    <TouchableOpacity
-                      style={{
-                        padding: 7,
-                        paddingLeft: 12,
-                        paddingRight: 12,
-                        borderRadius: 50,
-                        backgroundColor: '#E4DFFA',
-                        margin: 5,
-                        overflow: 'scroll',
-                      }}
-                      key={`${tag}-${index}`}
-                      onPress={onPress}>
-                      <Text
-                        style={{
-                          textAlign: 'center',
-                          color: '#30467B99',
-                          fontWeight: '500',
-                        }}>
-                        {tag}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                />
-              </ScrollView>
-            </View>
-
-            {/*  Testimonials component */}
-
-            <View style={styles.Testimonals}>
-              <Text style={styles.TopicTitle}>Testimonals</Text>
-              <Text style={styles.topicDescription}>
-                phone a friend (or collegue).
-              </Text>
+            <ScrollView horizontal={true} style={styles.tagInserts}>
               <Tags
-                style={{
-                  borderWidth: 2,
-                  borderColor: '#D9CEFB',
-                  padding: 3,
-                  borderRadius: 10,
-                  overflow: 'scroll',
-                  width: 320,
-                  marginTop: 10,
-                }}
+                style={styles.tagContainer}
                 initialText=""
                 textInputProps={{
-                  placeholder: 'Add email address for a testimonial link',
+                  placeholder: 'Share some things you enjoys',
                 }}
-                initialTags={[]}
+                initialTags={['Writing music', 'Producing beats', 'Singing']}
                 onChangeTags={tags => console.log(tags)}
                 onTagPress={(index, tagLabel, event, deleted) =>
                   console.log(
@@ -311,184 +243,256 @@ class MyProfile extends Component {
                   </TouchableOpacity>
                 )}
               />
-              <TouchableOpacity>
-                <Text
+            </ScrollView>
+          </View>
+
+          {/*  Testimonials component */}
+
+          <View style={styles.Testimonals}>
+            <Text style={styles.TopicTitle}>Testimonals</Text>
+            <Text style={styles.topicDescription}>
+              phone a friend (or collegue).
+            </Text>
+            <Tags
+              style={{
+                borderWidth: 2,
+                borderColor: '#D9CEFB',
+                padding: 3,
+                borderRadius: 10,
+                overflow: 'scroll',
+                width: 320,
+                marginTop: 10,
+              }}
+              initialText=""
+              textInputProps={{
+                placeholder: 'Add email address for a testimonial link',
+              }}
+              initialTags={[]}
+              onChangeTags={tags => console.log(tags)}
+              onTagPress={(index, tagLabel, event, deleted) =>
+                console.log(
+                  index,
+                  tagLabel,
+                  event,
+                  deleted ? 'deleted' : 'not deleted',
+                )
+              }
+              containerStyle={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'nowrap',
+                width: '60%',
+              }}
+              inputStyle={{backgroundColor: '#E4DFFA'}}
+              renderTag={({
+                tag,
+                index,
+                onPress,
+                deleteTagOnPress,
+                readonly,
+              }) => (
+                <TouchableOpacity
                   style={{
-                    position: 'relative',
-                    left: '94%',
-                    bottom: 45,
-                    fontSize: 30,
-                    color: '#A58CF5',
-                    fontWeight: '300',
-                  }}>
-                  +
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* My Basics */}
-
-            <View style={styles.basics}>
-              <Text style={[styles.TopicTitle, {marginBottom: 10}]}>
-                My basics
+                    padding: 7,
+                    paddingLeft: 12,
+                    paddingRight: 12,
+                    borderRadius: 50,
+                    backgroundColor: '#E4DFFA',
+                    margin: 5,
+                    overflow: 'scroll',
+                  }}
+                  key={`${tag}-${index}`}
+                  onPress={onPress}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: '#30467B99',
+                      fontWeight: '500',
+                    }}>
+                    {tag}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+            <TouchableOpacity>
+              <Text
+                style={{
+                  position: 'relative',
+                  left: '94%',
+                  bottom: 45,
+                  fontSize: 30,
+                  color: '#A58CF5',
+                  fontWeight: '300',
+                }}>
+                +
               </Text>
-              {this.state.basicslist.map(e => (
-                <View style={styles.basicsEach}>
-                  <Text style={styles.basicText}>{e}</Text>
-                  <TouchableOpacity styles={styles.basicButtons}>
-                    <Text style={styles.basicAdd}>
-                      Add
-                      <Text style={{fontSize: 20, fontWeight: '100'}}>
-                        {' >'}
-                      </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* My Basics */}
+
+          <View style={styles.basics}>
+            <Text style={[styles.TopicTitle, {marginBottom: 10}]}>
+              My basics
+            </Text>
+            {basicslist.map(e => (
+              <View style={styles.basicsEach}>
+                <Text style={styles.basicText}>{e}</Text>
+                <TouchableOpacity styles={styles.basicButtons}>
+                  <Text style={styles.basicAdd}>
+                    Add
+                    <Text style={{fontSize: 20, fontWeight: '100'}}>
+                      {' >'}
                     </Text>
-                  </TouchableOpacity>
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+
+          {/* my pronouns */}
+          <View style={styles.pronounContainer}>
+            <Text style={styles.TopicTitle}>My pronouns</Text>
+            <Text style={styles.topicDescription}>
+              Let us know how to address you.
+            </Text>
+            <Tags
+              style={[styles.tagContainer, {marginTop: 10}]}
+              initialText=""
+              textInputProps={{
+                placeholder: 'Add your pronouns',
+              }}
+              initialTags={[]}
+              onChangeTags={tags => console.log(tags)}
+              onTagPress={(index, tagLabel, event, deleted) =>
+                console.log(
+                  index,
+                  tagLabel,
+                  event,
+                  deleted ? 'deleted' : 'not deleted',
+                )
+              }
+              containerStyle={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'nowrap',
+                width: '60%',
+              }}
+              inputStyle={{backgroundColor: '#E4DFFA'}}
+              renderTag={({
+                tag,
+                index,
+                onPress,
+                deleteTagOnPress,
+                readonly,
+              }) => (
+                <TouchableOpacity
+                  style={{
+                    padding: 7,
+                    paddingLeft: 12,
+                    paddingRight: 12,
+                    borderRadius: 50,
+                    backgroundColor: '#E4DFFA',
+                    margin: 5,
+                    overflow: 'scroll',
+                  }}
+                  key={`${tag}-${index}`}
+                  onPress={onPress}>
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      color: '#30467B99',
+                      fontWeight: '500',
+                    }}>
+                    {tag}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+
+          {/* Created Account */}
+          <View style={styles.createdAccount}>
+            <Text style={styles.TopicTitle}>Connected Accounts</Text>
+            <Text style={styles.topicDescription}>Show off your skills.</Text>
+
+            {/*  Component for accounts  */}
+            <View style={{display: 'flex', flexDirection: 'column'}}>
+              {/*  each account */}
+
+              {accountsList.map(e => (
+                <View style={styles.eachAccount}>
+                  {/* first component */}
+                  <View
+                    style={{
+                      width: e.width,
+                      height: e.height,
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}>
+                    {/* logo */}
+                    <ImageBackground
+                      style={{width: '100%', height: '100%'}}
+                      source={e.logo}></ImageBackground>
+                  </View>
+                  {/* second component */}
+                  <View style={{marginLeft: 10, marginRight: 10}}>
+                    <Text style={styles.accountTopic}>
+                      Connect your {e.name}
+                    </Text>
+                    <Text style={{color: '#30467B99', width: 230}}>
+                      Choose your top five. Your profile will be visible to
+                      other users.
+                    </Text>
+                  </View>
+                  {/* third component */}
+                  <View style={styles.circle}></View>
+                  <View style={styles.accoutSelect}>
+                    {/* top5 from accounts */}
+                    <TouchableOpacity style={styles.top5}>
+                      <Text style={styles.top5input}>+</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.top5}>
+                      <Text style={styles.top5input}>+</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.top5}>
+                      <Text style={styles.top5input}>+</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.top5}>
+                      <Text style={styles.top5input}>+</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.top5}>
+                      <Text style={styles.top5input}>+</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               ))}
             </View>
-
-            {/* my pronouns */}
-            <View style={styles.pronounContainer}>
-              <Text style={styles.TopicTitle}>My pronouns</Text>
-              <Text style={styles.topicDescription}>
-                Let us know how to address you.
-              </Text>
-              <Tags
-                style={[styles.tagContainer, {marginTop: 10}]}
-                initialText=""
-                textInputProps={{
-                  placeholder: 'Add your pronouns',
-                }}
-                initialTags={[]}
-                onChangeTags={tags => console.log(tags)}
-                onTagPress={(index, tagLabel, event, deleted) =>
-                  console.log(
-                    index,
-                    tagLabel,
-                    event,
-                    deleted ? 'deleted' : 'not deleted',
-                  )
-                }
-                containerStyle={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  flexWrap: 'nowrap',
-                  width: '60%',
-                }}
-                inputStyle={{backgroundColor: '#E4DFFA'}}
-                renderTag={({
-                  tag,
-                  index,
-                  onPress,
-                  deleteTagOnPress,
-                  readonly,
-                }) => (
-                  <TouchableOpacity
-                    style={{
-                      padding: 7,
-                      paddingLeft: 12,
-                      paddingRight: 12,
-                      borderRadius: 50,
-                      backgroundColor: '#E4DFFA',
-                      margin: 5,
-                      overflow: 'scroll',
-                    }}
-                    key={`${tag}-${index}`}
-                    onPress={onPress}>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        color: '#30467B99',
-                        fontWeight: '500',
-                      }}>
-                      {tag}
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              />
-            </View>
-
-            {/* Created Account */}
-            <View style={styles.createdAccount}>
-              <Text style={styles.TopicTitle}>Connected Accounts</Text>
-              <Text style={styles.topicDescription}>Show off your skills.</Text>
-
-              {/*  Component for accounts  */}
-              <View style={{display: 'flex', flexDirection: 'column'}}>
-                {/*  each account */}
-
-                {this.state.accountsList.map(e => (
-                  <View style={styles.eachAccount}>
-                    {/* first component */}
-                    <View
-                      style={{
-                        width: e.width,
-                        height: e.height,
-                        display: 'flex',
-                        justifyContent: 'center',
-                      }}>
-                      {/* logo */}
-                      <ImageBackground
-                        style={{width: '100%', height: '100%'}}
-                        source={e.logo}></ImageBackground>
-                    </View>
-                    {/* second component */}
-                    <View style={{marginLeft: 10, marginRight: 10}}>
-                      <Text style={styles.accountTopic}>
-                        Connect your {e.name}
-                      </Text>
-                      <Text style={{color: '#30467B99', width: 230}}>
-                        Choose your top five. Your profile will be visible to
-                        other users.
-                      </Text>
-                    </View>
-                    {/* third component */}
-                    <View style={styles.circle}></View>
-                    <View style={styles.accoutSelect}>
-                      {/* top5 from accounts */}
-                      <TouchableOpacity style={styles.top5}>
-                        <Text style={styles.top5input}>+</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={styles.top5}>
-                        <Text style={styles.top5input}>+</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={styles.top5}>
-                        <Text style={styles.top5input}>+</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={styles.top5}>
-                        <Text style={styles.top5input}>+</Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={styles.top5}>
-                        <Text style={styles.top5input}>+</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                ))}
-              </View>
-            </View>
-            <View style={{width: 100, position: 'relative', left:'75%', bottom:0}}>
-              <IconButton
-                style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-                icon="arrow-right"
-                color={Colors.white}
-                size={40}
-                onPress={() => {
-                  //   uncomment the alert when data is connected
-                  // alert('Please select at least 3');
-                  this.props.navigation.navigate('Explore');
-                }}
-              />
-            </View>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-}
+          <View
+            style={{width: 100, position: 'relative', left: '75%', bottom: 0}}>
+            <IconButton
+              style={{backgroundColor: 'lightgray', width: 80, height: 45}}
+              icon="arrow-right"
+              color={Colors.white}
+              size={40}
+              onPress={() => {
+                //   uncomment the alert when data is connected
+                // alert('Please select at least 3');
+                this.props.navigation.navigate('Explore');
+              }}
+            />
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+// }
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
@@ -584,13 +588,15 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   aboutMeInput: {
-    padding: 10,
+    padding: 5,
     borderWidth: 2,
     height: 90,
     borderRadius: 10,
     borderColor: '#D9CEFB',
     marginTop: 10,
     width: '100%',
+    justifyContent: 'center',
+    display: 'flex',
   },
   myInterests: {
     display: 'flex',
