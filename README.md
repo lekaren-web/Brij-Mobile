@@ -1,5 +1,10 @@
 # Brij-Mobile
+## Make sure XCODE locally is version 13
 
+## Current versions
+ "react": "^18.0.0",
+ "react-native": "^0.68.1",
+ Xcode is newly updated from appstore as version 13.3.1
 <!-- notes:  
 import {User} from '../src/models';
 import {Auth, DataStore } from 'aws-amplify'

@@ -213,7 +213,7 @@ export const schema = {
                 "sexuality": {
                     "name": "sexuality",
                     "isArray": true,
-                    "type": "String",
+                    "type": "AWSJSON",
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
@@ -281,9 +281,7 @@ export const schema = {
                 "VaccinationStatus": {
                     "name": "VaccinationStatus",
                     "isArray": false,
-                    "type": {
-                        "enum": "VaccinationStatus"
-                    },
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -303,10 +301,11 @@ export const schema = {
                 },
                 "followList": {
                     "name": "followList",
-                    "isArray": false,
+                    "isArray": true,
                     "type": "AWSJSON",
                     "isRequired": false,
-                    "attributes": []
+                    "attributes": [],
+                    "isArrayNullable": true
                 },
                 "pictures": {
                     "name": "pictures",
@@ -321,6 +320,42 @@ export const schema = {
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
+                    "attributes": []
+                },
+                "both": {
+                    "name": "both",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "interests": {
+                    "name": "interests",
+                    "isArray": true,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "inclusionSurvery": {
+                    "name": "inclusionSurvery",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "InclusivityAgreement": {
+                    "name": "InclusivityAgreement",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "sub": {
+                    "name": "sub",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
                     "attributes": []
                 },
                 "createdAt": {
@@ -366,15 +401,7 @@ export const schema = {
             ]
         }
     },
-    "enums": {
-        "VaccinationStatus": {
-            "name": "VaccinationStatus",
-            "values": [
-                "VACCINATED",
-                "UNVACCINATED"
-            ]
-        }
-    },
+    "enums": {},
     "nonModels": {},
-    "version": "5f5f025b6cde5d182edc3bd698fcc2ff"
+    "version": "d45d1e42a974af21e18e1ae2d27431b2"
 };

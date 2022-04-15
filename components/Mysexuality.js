@@ -90,7 +90,8 @@ const Mysexuality = props => {
               // alert('Please select at least 3');
               props.route.params.sexuality = arr;
               props.route.params.sexualityVisible = sexualityVisible;
-              console.log('hi', props.route.params);
+              // console.log('hi', props.route.params);
+              props.navigation.navigate('MyInterests', props.route.params)
             }}
           />
         </View>

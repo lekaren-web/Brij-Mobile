@@ -13,32 +13,65 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
-  Image,
 } from 'react-native';
 import Option from './option';
-import CheckBox from '@react-native-community/checkbox';
 import {
   SelectMultipleButton,
   SelectMultipleGroupButton,
 } from 'react-native-selectmultiple-button';
+const MyInterests = props => {
+  // constructor(props) {
+  // super(props);
 
-const Disability = props => {
-  const [disabilityVisible, setdisabilityVisible] = useState(false);
-  const [disability, setdisability] = useState(false);
-  const [yesNo, setYesNo] = useState(false);
+  //   constructor() {
+  //     super();
 
+  //   }
+  // componentDidMount(){
+  const [arr, setArr] = useState([])
+  //   // console.log(props.route.params)
+  // }
   return (
     <SafeAreaView style={styles.container}>
       <View style={{height: '100%'}}>
+        {/* first component */}
         <View style={styles.component1}>
-          <Text style={styles.headerText}>Do I have a disability?</Text>
+          <Text style={styles.headerText}>My interests</Text>
+          <Text style={styles.subText}>Highlight your areas or expertise or aspirational interest.</Text>
         </View>
 
+        {/*  second component */}
         <View style={styles.options}>
+            <ScrollView>
           <SelectMultipleGroupButton
-            multiple={false}
-            group={[{value: 'Yes'}, {value: 'No'}]}
-            defaultSelectedIndex={[1]}
+            multiple={true}
+            group={[
+              {value: 'Creative Direction'},
+              {value: 'Performer'},
+              {value: 'Engineer'},
+              {value: 'PR'},
+              {value: 'Sound Designer'},
+              {value: 'Audio Engineer'},
+              {value: 'Graphic Designer'},
+              {value: 'Producer'},
+              {value: 'A&R'},
+              {value: 'Publisher'},
+              {value: 'Manager'},
+              {value: 'Mixer'},
+              {value: 'Promoter'},
+              {value: 'Photographer'},
+              {value: 'Accompanist'},
+              {value: 'Arranger'},
+              {value: 'Security'},
+              {value: 'Director'},
+              {value: 'Composer'},
+              {value: 'Record Executive'},
+              {value: 'Album Cover Designer'},
+              {value: 'Artist Development'},
+              {value: 'Artist Relations'},
+              {value: 'Entertainment Law'},
+            ]}
+            defaultSelectedIndexes={[0]}
             textStyle={{fontSize: 18, textAlign: 'center'}}
             buttonViewStyle={{
               alignItems: 'flex-start',
@@ -46,10 +79,7 @@ const Disability = props => {
               borderRadius: 27,
               borderColor: '#7F5AF0',
               textAlign: 'center',
-              margin: 5,
-              width: '80%',
-              alignItems: 'center',
-              padding: 5,
+              margin: 3
             }}
             highLightStyle={{
               textColor: '#30467B',
@@ -62,50 +92,20 @@ const Disability = props => {
               borderTintColor: 'transparent',
               textTintColor: 'white',
               backgroundTintColor: '#7F5AF0',
-              alignItems: 'center',
             }}
             containerViewStyle={{
               width: '100%',
-              justifyContent: 'center',
+              justifyContent: 'flex-start',
               alignContent: 'center',
-              textAlign: 'center',
-              alignItems: 'center',
             }}
             onSelectedValuesChange={selectedValues =>
-              setYesNo(selectedValues.toString())
+              setArr(selectedValues)
+              // this._groupButtonOnSelectedValuesChange(selectedValues)
             }
           />
+          </ScrollView>
         </View>
 
-        <View style={styles.checkboxContainer}>
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: '#000',
-              height: 22,
-              width: 22,
-              borderRadius: 5,
-              marginRight: 10
-            }}>
-            <CheckBox
-              hideBox
-              checked={disabilityVisible}
-              onPress={() => {
-                setdisabilityVisible(!disabilityVisible);
-              }}
-              style={{height: 20, width: 20}}
-            />
-          </View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: '#30467B',
-              marginBottom: 3,
-            }}>
-            Visible on profile
-          </Text>
-        </View>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
           <IconButton
             style={{backgroundColor: 'lightgray', width: 80, height: 45}}
@@ -113,10 +113,11 @@ const Disability = props => {
             color={Colors.white}
             size={40}
             onPress={() => {
-              props.route.params.disability = disability;
-              props.route.params.disabilityVisible = disabilityVisible;
-              // console.log(props.route.params);
-              props.navigation.navigate('Myethnicity', props.route.params);
+              //   uncomment the alert when data is connected
+              // alert('Please select at least 3');
+              props.route.params.interests= arr;
+            //   console.log(props.route.params)
+              props.navigation.navigate('InclusionSurvey', props.route.params);
             }}
           />
         </View>
@@ -128,19 +129,6 @@ const Disability = props => {
 // }
 const styles = StyleSheet.create({
   selectButtonText: {textAlign: 'center', color: '#30467B'},
-  checkboxContainer: {
-    flexDirection: 'row',
-    marginBottom: 20,
-    marginTop: 220,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-  },
-  checkbox: {
-    alignSelf: 'center',
-  },
-  label: {
-    margin: 8,
-  },
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -149,12 +137,11 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     padding: 10,
     margin: 20,
-    height: '100%',
   },
   component1: {
     display: 'flex',
     flexDirection: 'column',
-    marginTop: '50%',
+    marginTop: '40%',
   },
   headerText: {
     color: '#30467B',
@@ -168,10 +155,11 @@ const styles = StyleSheet.create({
   },
   options: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     alignContent: 'center',
-    justifyContent: 'center',
-    marginTop: 70,
+    justifyContent: 'space-between',
+    marginTop: 50,
   },
 
   btnPress: {
@@ -193,4 +181,4 @@ const styles = StyleSheet.create({
     margin: 5,
   },
 });
-export default Disability;
+export default MyInterests;

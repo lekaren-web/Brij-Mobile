@@ -19,6 +19,10 @@ import Mygender from './Mygender'
 import Disability from './Disability'
 import Myethnicity from './Myethnicity'
 import Mysexuality from './Mysexuality'
+import MyInterests from './MyInterests'
+import InclusionSurvey from './InclusionSurvey'
+import AddPhotos from './AddPhotos'
+import InclusivityAgreement from './InclusivityAgreement'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 const StackNav = () => {
@@ -106,6 +110,26 @@ const StackNav = () => {
         name="Mysexuality"
         component={Mysexuality}
         options={{title: 'Mysexuality', headerShown: false}}
+      />
+      <Stack.Screen
+        name="MyInterests"
+        component={MyInterests}
+        options={{title: 'MyInterests', headerShown: false}}
+      />
+      <Stack.Screen
+        name="InclusionSurvey"
+        component={InclusionSurvey}
+        options={{title: 'InclusionSurvey', headerShown: false}}
+      />
+      <Stack.Screen
+        name="AddPhotos"
+        component={AddPhotos}
+        options={{title: 'AddPhotos', headerShown: false}}
+      />
+      <Stack.Screen
+        name="InclusivityAgreement"
+        component={InclusivityAgreement}
+        options={{title: 'InclusivityAgreement', headerShown: false}}
       />
       <Stack.Screen
         name="MyProfile"

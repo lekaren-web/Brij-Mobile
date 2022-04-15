@@ -1,5 +1,5 @@
 // screens/AddUserScreen.js
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {IconButton, Colors} from 'react-native-paper';
 import {
   Button,
@@ -26,7 +26,7 @@ import insta from '../assets/insta.png';
 import Auth from 'aws-amplify'
 // import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 // import Chevron from 'react-chevron'
-const MyProfile = () => {
+const MyProfile = (props) => {
   // constructor() {
   //   super();
   // this.state = {
@@ -62,6 +62,8 @@ const MyProfile = () => {
       }
     });
   };
+
+  const [aboutMe, setAboutMe] = useState('');
   //  handleUploadPhoto(){
   //     fetch(`${SERVER_URL}/api/upload`, {
   //       method: 'POST',
@@ -177,6 +179,7 @@ const MyProfile = () => {
               multiline
               placeholderTextColor="#30467B99"
               style={styles.aboutMeInput}
+              onChangeText={(val) => setAboutMe(val)}
               placeholder="Use this space to give a quick rundown of who you are and what you do."></TextInput>
           </View>
 

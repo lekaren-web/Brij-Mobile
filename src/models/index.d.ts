@@ -1,9 +1,6 @@
 import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplify/datastore";
 
-export enum VaccinationStatus {
-  VACCINATED = "VACCINATED",
-  UNVACCINATED = "UNVACCINATED"
-}
+
 
 
 
@@ -53,12 +50,17 @@ export declare class User {
   readonly occupation?: (string | null)[] | null;
   readonly education?: (string | null)[] | null;
   readonly yearsOfExperience?: number | null;
-  readonly VaccinationStatus?: VaccinationStatus | keyof typeof VaccinationStatus | null;
+  readonly VaccinationStatus?: string | null;
   readonly Org?: boolean | null;
   readonly OrgName?: string | null;
-  readonly followList?: string | null;
+  readonly followList?: (string | null)[] | null;
   readonly pictures?: (string | null)[] | null;
   readonly profilePic?: string | null;
+  readonly both?: boolean | null;
+  readonly interests?: (string | null)[] | null;
+  readonly inclusionSurvery?: string | null;
+  readonly InclusivityAgreement?: boolean | null;
+  readonly sub: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<User, UserMetaData>);
