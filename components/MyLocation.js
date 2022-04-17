@@ -12,8 +12,9 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
+  Image
 } from 'react-native';
-import states from '../data/states.json'
+import states from '../data/states.json';
 // import RNLocation from 'react-native-location';
 
 const Mylocation = props => {
@@ -25,7 +26,7 @@ const Mylocation = props => {
       <View style={styles.container}>
         <Text style={styles.heading}>My Location</Text>
         <Text style={styles.subHeading}>
-          Find your current city. You’re able to change this at any time.
+          Find your current state. You’re able to change this at any time.
         </Text>
         {/* <DropDownPicker
           style={{
@@ -54,21 +55,32 @@ const Mylocation = props => {
           setOpen={setOpen}
           setValue={setValue}
           setItems={setItems}
-          style={{backgroundColor: 'transparent', borderWidth: 0, marginTop: 40, borderBottomWidth: 2, borderBottomColor:'#30467B'}}
+          style={{
+            backgroundColor: 'transparent',
+            borderWidth: 0,
+            marginTop: 40,
+            borderBottomWidth: 2,
+            borderBottomColor: '#30467B',
+          }}
         />
         <View style={{position: 'absolute', bottom: '10%', right: 0}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#7F5AF0',
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
-              //   uncomment the alert when data is connected
-              // alert('Please insert your name before continuing');
-              props.route.params.location = value
+              props.route.params.location = value;
               props.navigation.navigate('Mygender', props.route.params);
-            }}
-          />
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

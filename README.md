@@ -52,3 +52,5 @@ import {Auth, DataStore } from 'aws-amplify'
         badgeColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
       />
  -->
+
+ A user can receive many messages. A message has exactly one sender. A message has exactly one recipient. So, there are two one-to-many relationships from "message" to "user" - one for the sender, and one for the receiver.Jun 1, 2017

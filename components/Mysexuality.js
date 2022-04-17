@@ -12,6 +12,7 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  Image,
   TouchableHighlight,
 } from 'react-native';
 
@@ -26,6 +27,7 @@ import sexualities from '../data/sexualities.json';
 const Mysexuality = props => {
   const [arr, setArr] = useState([]);
   const [sexualityVisible, setsexualityVisible] = useState(false);
+  const [nextPage, setNextPage] = useState('lightgrey');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,9 +45,13 @@ const Mysexuality = props => {
               data={sexualities}
               onSelectedItemsChange={(val) => setArr(val)}
               selectedItems={arr}
-              enableTitle
               title={'Select from the following'}
               icon={'caret-down'}
+              iconDisabled={true}
+              enableTitle
+
+              
+              
             />
           </ScrollView>
         </View>
@@ -80,20 +86,25 @@ const Mysexuality = props => {
           </Text>
         </View>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+          <TouchableOpacity
+            style={{
+              backgroundColor: nextPage,
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
-              //   uncomment the alert when data is connected
-              // alert('Please select at least 3');
               props.route.params.sexuality = arr;
               props.route.params.sexualityVisible = sexualityVisible;
               // console.log('hi', props.route.params);
               props.navigation.navigate('MyInterests', props.route.params)
-            }}
-          />
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

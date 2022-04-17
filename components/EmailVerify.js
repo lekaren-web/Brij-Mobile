@@ -5,7 +5,7 @@ import {IconButton, Colors} from 'react-native-paper';
 //   RadialGradient,
 //   ImageBackgroundPlaceholder,
 // } from "react-native-image-filter-kit";
-
+import CodeInput from 'react-native-code-input';
 import {
   Button,
   SafeAreaView,
@@ -48,6 +48,7 @@ class EmailVerify extends Component {
       keyboardStatus: false,
       errorMessage: '',
       code: '',
+      nextPage: 'lightgrey'
     };
   }
 
@@ -76,7 +77,7 @@ class EmailVerify extends Component {
       await Auth.signIn(
         this.props.route.params.username,
         this.props.route.params.password,
-      )
+      );
       this.props.navigation.navigate('Verified');
     } catch (e) {
       alert('Invalid Verfication Code!');
@@ -113,16 +114,6 @@ class EmailVerify extends Component {
       // <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView>
         <View style={styles.container}>
-          {
-            /* <RadialGradient
-          colors={["red", "#00ff00", "blue"]}
-          stops={[0, 0.5, 1]}
-          image={
-            <ImageBackgroundPlaceholder style={this.state.imageStyle}>
-              /* your content here */
-            // </ImageBackgroundPlaceholder>
-          }
-          {/* />  */}
           <Text style={styles.TopicTitle}>
             We just sent you a verification code.
           </Text>
@@ -131,22 +122,41 @@ class EmailVerify extends Component {
           </Text>
           {/* <Text style={{fontSize: 20,  marginBottom: 50, color: '#30467BCC'}}>We will be sending you a verification code.</Text> */}
           <View style={styles.inputGroup}>
-            <Input
+            {/* <Input
               value={this.state.code}
               onChangeText={val => this.setState({code: val})}
               keyboardType="number-pad"
               textContentType="oneTimeCode"
               style={{
                 borderStyle: 'solid',
-                borderColor: '#30467B99',
+                borderColor: 'black',
                 height: 40,
-                borderBottomWidth: 1,
+                borderBottomWidth: 0,
                 width: '100%',
                 marginTop: 40,
+                fontSize: 30,
               }}
               // onChangeText={onChangeText}
-              placeholder="_ _ _ _ _ _"
+              placeholder="_    _    _    _    _    _"
               // value={text}
+            /> */}
+            <CodeInput
+              ref="codeInputRef2"
+              // secureTextEntry
+              activeColor="#7F5AF0"
+              inactiveColor="lightgrey"
+              autoFocus={false}
+              inputPosition="center"
+              size={50}
+              textContentType="oneTimeCode"
+              keyboardType="number-pad"
+              onFulfill={val => {
+                this.setState({nextPage: '#7F5AF0'})
+                this.setState({code: val});
+            }}
+              containerStyle={{marginTop: 30}}
+              codeInputStyle={{borderWidth: 1.5}}
+              codeLength= {6}
             />
 
             {/* <Input
@@ -193,25 +203,32 @@ class EmailVerify extends Component {
               onChangeText={(val) => this.setState({ re_enter_password: val })}
             /> */}
 
+            {/* <KeyboardAvoidingView behavior="" > */}
+            <Text style={{color: '#30467B', top: 20, fontSize: 13}}>
+              Didn’t get a code?
+            </Text>
             <View style={{position: 'absolute', bottom: -10, right: -5}}>
               <TouchableOpacity
-                style={{backgroundColor: 'lightgray', width: 80, height: 45}}
+                style={{
+                  backgroundColor: this.state.nextPage,
+                  width: 70,
+                  height: 45,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 50,
+                }}
                 color={Colors.white}
                 size={40}
                 onPress={() => {
                   //   this.storeUser();
                   this.confirmCode();
+                  this.setState({isLoading: true});
                   // this.props.navigation.navigate('Verified')
+                  // source={require('../assets/profile.png')}
                 }}>
-                <Text>Place holder</Text>
+                <Image source={require('../assets/arrow-right.png')}></Image>
               </TouchableOpacity>
             </View>
-
-            {/* <KeyboardAvoidingView behavior="" > */}
-            <Text style={{color: '#30467B', top: 20, fontSize: 13}}>
-              Didn’t get a code?
-            </Text>
-
             {/* </KeyboardAvoidingView> */}
           </View>
         </View>

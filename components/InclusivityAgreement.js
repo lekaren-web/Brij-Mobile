@@ -23,48 +23,89 @@ import {Auth, DataStore} from 'aws-amplify';
 import {User} from '../src/models';
 const InclusivityAgreement = props => {
   const [InclusivityAgreement, setInclusivityAgreement] = useState(false);
- 
- 
-  const save = async () => {
-    const user  = await Auth.currentAuthenticatedUser();
-    const newUser = new User({
-      sub: user.attributes.sub,
-      name: props.route.params.name,
-      birthday: props.route.params.birthday,
-      age: props.route.params.age,
-      phone: props.route.params.phone,
-      email: props.route.params.email,
-      enableNotifs: props.route.params.enableNotifs,
-      mentor: props.route.params.mentor,
-      mentee: props.route.params.mentee,
-      lookingFor: props.route.params.lookingFor,
-      gender: props.route.params.gender,
-      pronouns: props.route.params.pronouns,
-      disability: props.route.params.disability,
-      disabilityVisible: props.route.params.disabilityVisible,
-      ethnicity: props.route.params.ethnicity.toString(),
-      ethnicityVisible: props.route.params.ethnicityVisible,
-      sexuality: props.route.params.sexuality,
-      sexualityVisible: props.route.params.sexualityVisible,
-      bio: props.route.params.bio,
-      myInterest: props.route.params.myInterest,
-      testimonials: props.route.params.testimonials,
-      industry: [],
-      occupation: [],
-      education: [],
-      yearsOfExperience: 0,
-      VaccinationStatus: '',
-      Org: false,
-      OrgName: '',
-      followList: [],
-      pictures: [],
-      profilePic: '',
-      both: props.route.params.both,
-      interests: props.route.params.interests,
-      inclusionSurvery: props.route.params.inclusionSurvery,
-      InclusivityAgreement: props.route.params.InclusivityAgreement,
-    });
-    DataStore.save(newUser);
+  const userData = {
+    name: props.route.params.name,
+        birthday: props.route.params.birthday,
+        age: props.route.params.age,
+        phone: '',
+        email: '',
+        enableNotifs: props.route.params.enableNotifs,
+        mentor: props.route.params.mentor,
+        mentee: props.route.params.mentee,
+        lookingFor: props.route.params.lookingFor,
+        gender: props.route.params.gender,
+        pronouns: '',
+        disability: props.route.params.disability,
+        disabilityVisible: props.route.params.disabilityVisible,
+        ethnicity: props.route.params.ethnicity,
+        ethnicityVisible: props.route.params.ethnicityVisible,
+        sexuality: props.route.params.sexuality,
+        sexualityVisible: props.route.params.sexualityVisible,
+        bio: 'Lorem ipsum dolor sit amet',
+        myInterest: [],
+        testimonials: [],
+        industry: [],
+        occupation: [],
+        education: [],
+        yearsOfExperience: 0,
+        VaccinationStatus: 'Lorem ipsum dolor sit amet',
+        Org: false,
+        OrgName: 'Lorem ipsum dolor sit amet',
+        followList: [],
+        pictures: [],
+        profilePic: 'Lorem ipsum dolor sit amet',
+        both: props.route.params.both,
+        interests: props.route.params.interests,
+        inclusionSurvery: props.route.params.inclusionSurvery,
+        InclusivityAgreement: props.route.params.InclusivityAgreement,
+        sub: ""
+  }
+  const save = async (val) => {
+    const userAuth = await Auth.currentAuthenticatedUser();
+    await DataStore.save(
+      new User({
+        name: props.route.params.name,
+        birthday: props.route.params.birthday,
+        age: props.route.params.age,
+        phone: '',
+        email: '',
+        enableNotifs: props.route.params.enableNotifs,
+        mentor: props.route.params.mentor,
+        mentee: props.route.params.mentee,
+        lookingFor: props.route.params.lookingFor,
+        gender: props.route.params.gender,
+        pronouns: '',
+        disability: props.route.params.disability,
+        disabilityVisible: props.route.params.disabilityVisible,
+        ethnicity: props.route.params.ethnicity,
+        ethnicityVisible: props.route.params.ethnicityVisible,
+        sexuality: props.route.params.sexuality,
+        sexualityVisible: props.route.params.sexualityVisible,
+        bio: 'Use this space to give a quick rundown of who you are and what you do.',
+        myInterest: [],
+        testimonials: [],
+        industry: [],
+        occupation: [],
+        education: [],
+        yearsOfExperience: 0,
+        VaccinationStatus: '',
+        Org: false,
+        OrgName: '',
+        followList: [],
+        pictures: props.route.params.pictures,
+        profilePic: '',
+        both: props.route.params.both,
+        interests: props.route.params.interests,
+        inclusionSurvery: props.route.params.inclusionSurvery,
+        InclusivityAgreement: val,
+        sub: userAuth.attributes.sub,
+        premium: false,
+        freemium: true,
+        active: true,
+        location: props.route.params.location
+      ,
+      }),
+    );
   };
 
   return (
@@ -102,11 +143,12 @@ const InclusivityAgreement = props => {
           }}>
           <TouchableOpacity
             onPress={() => {
+              const val = true
               setInclusivityAgreement(true);
               props.route.params.InclusivityAgreement = InclusivityAgreement;
               //   console.log(props.route.params);
-              save();
-            //   props.navigation.navigate('MyProfile', props.route.params);
+              save(val);
+                props.navigation.navigate('MyProfile', props.route.params);
             }}
             style={{
               borderRadius: 50,

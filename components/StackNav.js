@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import LoginScreen from './Login';
 import EmailSignUp from './SignUpEmail';
@@ -24,23 +24,38 @@ import InclusionSurvey from './InclusionSurvey'
 import AddPhotos from './AddPhotos'
 import InclusivityAgreement from './InclusivityAgreement'
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {Auth} from 'aws-amplify'
 const Stack = createNativeStackNavigator();
-const StackNav = () => {
+
+const StackNav = () =>  {
+  // state ={
+    const [currentUser, setCurrentUSer] =  useState(null)
+  // }
+  // useEffect( async () => {
+    
+  //   // setCurrent(await Auth.currentAuthenticatedUser())
+  //   const getUSer = async() => {
+  //     setCurrentUSer(await Auth.currentAuthenticatedUser())
+  //   console.log(currentUser)
+  //   }
+
+  //   getUSer()
+  // }, [])
+  // render(){
+
   return (
-    <Stack.Navigator>
-      {/* first screen */}
+ <Stack.Navigator>
       <Stack.Screen
         name="Home"
         component={LoginScreen}
         options={{title: 'Login', headerShown: false}}
       />
-      {/* second screen */}
       <Stack.Screen
         name="SignUpHow"
         component={SignUp}
         options={{title: 'SignUpHow', headerShown: false}}
       />
-      {/* signup with email screen */}
+      
       <Stack.Screen
         name="EmailSignUp"
         component={EmailSignUp}
@@ -130,12 +145,15 @@ const StackNav = () => {
         name="InclusivityAgreement"
         component={InclusivityAgreement}
         options={{title: 'InclusivityAgreement', headerShown: false}}
-      />
+      />  
+      
+
       <Stack.Screen
         name="MyProfile"
         component={MyProfile}
         options={{title: 'MyProfile', headerShown: false}}
       />
+     
       <Stack.Screen
         name="Explore"
         component={Explore}
@@ -146,9 +164,11 @@ const StackNav = () => {
         component={Message}
         options={{title: 'Message', headerShown: false}}
       />
-    </Stack.Navigator>
+      </Stack.Navigator>
+      
   );
-};
+}
+// };
 
 export default StackNav;
 

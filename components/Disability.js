@@ -26,7 +26,7 @@ const Disability = props => {
   const [disabilityVisible, setdisabilityVisible] = useState(false);
   const [disability, setdisability] = useState(false);
   const [yesNo, setYesNo] = useState(false);
-
+  const [nextPage, setNextPage] = useState('lightgrey');
   return (
     <SafeAreaView style={styles.container}>
       <View style={{height: '100%'}}>
@@ -72,7 +72,10 @@ const Disability = props => {
               alignItems: 'center',
             }}
             onSelectedValuesChange={selectedValues =>
-              setYesNo(selectedValues.toString())
+              {
+                setYesNo(selectedValues.toString());
+                setNextPage('#7F5AF0')
+              }
             }
           />
         </View>
@@ -94,6 +97,7 @@ const Disability = props => {
                 setdisabilityVisible(!disabilityVisible);
               }}
               style={{height: 20, width: 20}}
+
             />
           </View>
           <Text
@@ -106,10 +110,16 @@ const Disability = props => {
             Visible on profile
           </Text>
         </View>
-        <View style={{position: 'absolute', bottom: 0, right: 0}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+        <View style={{position: 'absolute', bottom: 20, right: 0}}>
+          <TouchableOpacity
+            style={{
+              backgroundColor: nextPage,
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
@@ -117,8 +127,9 @@ const Disability = props => {
               props.route.params.disabilityVisible = disabilityVisible;
               // console.log(props.route.params);
               props.navigation.navigate('Myethnicity', props.route.params);
-            }}
-          />
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

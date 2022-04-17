@@ -11,14 +11,15 @@ import {
   View,
   Text,
   TouchableOpacity,
-  SafeAreaView
+  SafeAreaView,
+  Image
 } from "react-native";
 ;
 
 const Myname = (props) => {
 
   const [name, setName] = useState('')
-
+  const [nextPage, setNextPage] = useState('lightgrey')
 //  componentDidMount(){
 //    console.log('GOT!!!', this.props.route.params)
 //  }
@@ -31,23 +32,36 @@ const Myname = (props) => {
             style={styles.input}
             placeholder="Please insert your name"
             value={name}
-            onChangeText={(val) => setName(val)}
+            onChangeText={(val) => 
+              {
+                setNextPage('#7F5AF0');
+                setName(val);
+              }
+            }
             >
             </TextInput>
             <View style={{position: 'absolute', bottom:'7%', right: 0}}>
-            <IconButton
-              style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-              icon="arrow-right"
-              color={Colors.white}
-              size={40}
-              onPress={() => {
+             <TouchableOpacity
+            style={{
+              backgroundColor: nextPage,
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
+            color={Colors.white}
+            size={40}
+            onPress={() => {
+            
                 //   uncomment the alert when data is connected
-                // alert('Please insert your name before continuing');
-                // props.navigation.navigate("Mybirthday" )
+                // alert('Please select at least 3');
                 props.route.params.name = name
                 props.navigation.navigate("Mybirthday", props.route.params )
-              }}
-            />
+              
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>
@@ -76,6 +90,7 @@ const styles = StyleSheet.create({
         marginTop: '-40%',
         borderBottomWidth: 1,
         borderBottomColor: '#30467B',
+        fontSize: 25
     }
 });
 export default Myname;

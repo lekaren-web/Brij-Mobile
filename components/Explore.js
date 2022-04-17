@@ -15,7 +15,6 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-import users from '../data/user.json';
 // import { auth } from "firebase";
 // import * as fb from "firebase";
 // import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
@@ -34,7 +33,10 @@ import {useWindowDimensions} from 'react-native';
 import {PanGestureHandler} from 'react-native-gesture-handler';
 import like from '../assets/like.png';
 import dislike from '../assets/dislike.png';
-const Explore = () => {
+import {Auth, DataStore} from 'aws-amplify';
+import {User} from '../src/models';
+const Explore = (props) => {
+  const[users, setUsers] = useState([])
   const [currIndex, setCurrIndex] = useState(0);
   const [nextIndex, setnextIndex] = useState(currIndex + 1);
   const currentProfile = users[currIndex];
@@ -43,6 +45,7 @@ const Explore = () => {
   const translateX = useSharedValue(0);
   const Rotation = 60;
   const hiddenTranslateX = 2 * screenWidth;
+  const[currentUser, setCurrentUser] = useState(null)
   const rotate = useDerivedValue(
     () =>
       interpolate(translateX.value, [0, -hiddenTranslateX], [0, Rotation]) +
@@ -120,6 +123,16 @@ const Explore = () => {
     translateX.value = 0;
     setnextIndex(currIndex + 1);
   }, [currIndex]);
+  useEffect(() => {
+    setCurrentUser(currentProfile);
+  }, [currentProfile]);
+
+  useEffect(() => {
+    const fetchUsers = async() => {
+      setUsers(await DataStore.query(User))
+    }
+    fetchUsers()
+  }, [])
   //   render() {
   //     if (this.state.isLoading) {
   //       return (
@@ -128,6 +141,32 @@ const Explore = () => {
   //         </View>
   //       );
   //     }
+  const onSwipeLeft = async() => {
+
+    await DataStore.save(new Match({
+      User1Id: me.id,
+      User2Id: currentUser.id
+    }))
+  }
+  const onSwipeRight =() => {}
+
+  useEffect(() => {
+    const getCurrUser = async () => {
+      const currentUser = await Auth.currentAuthenticatedUser();
+
+      const dbUsers = await DataStore.query(
+        User,
+        u => u.sub === currentUser.attributes.sub,
+      );
+
+      if (dbUsers.length < 0) {
+        return;
+      }
+      setUser(dbUsers[0])
+
+    };
+    getCurrUser();
+  }, []);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor:'white',
     display: 'flex',
@@ -144,11 +183,12 @@ const Explore = () => {
           />
         </View>
         {/* back to profile button */}
-        <TouchableOpacity style={styles.backButton} onPress={() => this.props.navigation.navigate('MyProfile')}>
+        <TouchableOpacity style={styles.backButton} onPress={() => props.navigation.navigate('MyProfile')}>
           <ImageBackground
+          onPress={() => props.navigation.navigate('MyProfile')}
             style={{width: '100%', height: '100%'}}
             source={require('../assets/back.png')}
-          />
+          ></ImageBackground>
         </TouchableOpacity>
 
         {/* brij  */}
@@ -186,7 +226,7 @@ const Explore = () => {
                 style={{height: '100%', width: '100%'}}>
                 <View style={styles.userDescription}>
                   <Text style={styles.descriptionName}>
-                    {nextProfile.username}
+                    {nextProfile.name}
                   </Text>
                   <View
                     style={{
@@ -211,7 +251,7 @@ const Explore = () => {
         </View>
       )}
 
-      {currentProfile && (
+      {currentProfile ? (
         <PanGestureHandler onGestureEvent={gestureHandler}>
           {/*  */}
           <Animated.View style={[styles.cardContainer, cardStyle]}>
@@ -244,7 +284,7 @@ const Explore = () => {
                   style={{height: '100%', width: '100%'}}>
                   <View style={styles.userDescription}>
                     <Text style={styles.descriptionName}>
-                      {currentProfile.username}
+                      {currentProfile.name}
                     </Text>
                     <View
                       style={{
@@ -268,7 +308,13 @@ const Explore = () => {
             </View>
           </Animated.View>
         </PanGestureHandler>
-      )}
+      ) : (
+        <View>
+          <Text>No more users</Text>
+        </View>
+      )
+    
+    }
 
       {/*  footer  */}
       <View style={styles.footer}>
@@ -323,6 +369,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     alignItems: 'center',
+    height: 60
   },
   profilePic: {
     width: 40,
@@ -332,9 +379,11 @@ const styles = StyleSheet.create({
   },
   backButton: {
     width: 19,
-    height: 21,
+    height: 20,
     marginLeft: 20,
     marginRight: 15,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   brij: {
     textAlign: 'center',
@@ -429,7 +478,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     zIndex: 1,
-    elevation: 1,
     margin: 10
   },
   dislike: {
@@ -437,7 +485,6 @@ const styles = StyleSheet.create({
     top: 10,
     right: 0,
     zIndex: 1,
-    elevation: 1,
     margin: 10
   },
 });

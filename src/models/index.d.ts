@@ -4,6 +4,10 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
+type PostsMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 type MatchMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
@@ -12,10 +16,22 @@ type UserMetaData = {
   readOnlyFields: 'createdAt' | 'updatedAt';
 }
 
+export declare class Posts {
+  readonly id: string;
+  readonly message?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+  constructor(init: ModelInit<Posts, PostsMetaData>);
+  static copyOf(source: Posts, mutator: (draft: MutableModel<Posts, PostsMetaData>) => MutableModel<Posts, PostsMetaData> | void): Posts;
+}
+
 export declare class Match {
   readonly id: string;
   readonly User1?: User | null;
   readonly User2?: User | null;
+  readonly User1Id: string;
+  readonly User1ID?: string | null;
+  readonly isMatch: boolean;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly matchUser1Id?: string | null;
@@ -39,13 +55,13 @@ export declare class User {
   readonly pronouns?: string | null;
   readonly disability?: boolean | null;
   readonly disabilityVisible?: boolean | null;
-  readonly ethnicity?: string | null;
+  readonly ethnicity?: (string | null)[] | null;
   readonly ethnicityVisible?: boolean | null;
   readonly sexuality?: (string | null)[] | null;
   readonly sexualityVisible?: boolean | null;
   readonly bio?: string | null;
   readonly myInterest?: (string | null)[] | null;
-  readonly testimonials?: string | null;
+  readonly testimonials?: (string | null)[] | null;
   readonly industry?: (string | null)[] | null;
   readonly occupation?: (string | null)[] | null;
   readonly education?: (string | null)[] | null;
@@ -61,6 +77,10 @@ export declare class User {
   readonly inclusionSurvery?: string | null;
   readonly InclusivityAgreement?: boolean | null;
   readonly sub: string;
+  readonly premium?: boolean | null;
+  readonly freemium?: boolean | null;
+  readonly active?: boolean | null;
+  readonly location?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   constructor(init: ModelInit<User, UserMetaData>);

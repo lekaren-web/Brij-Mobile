@@ -11,18 +11,20 @@ import {
   Text,
   TouchableOpacity,
   Modal,
-  SafeAreaView
+  SafeAreaView,
+  Image
 } from 'react-native';
 import {User} from '../src/models';
 import {Auth, DataStore } from 'aws-amplify'
 
 const Notifs = (props) => {
   const [modalVisible, setmodalVisible] = useState('');
-  const [enableNotifs, setNotifs] = useState('');
-  
+  const [enableNotifs, setNotifs] = useState(true);
+  const [nextPage, setNextPage] = useState('lightgrey');
   const enableNotifsfunc = (val) => {
       setmodalVisible(false)
-      props.navigation.navigate('IamA', {enableNotifs: val});
+      setNextPage('#7F5AF0')
+     
   };
 
   // const setModalVisible = (visible) => {
@@ -58,7 +60,26 @@ const Notifs = (props) => {
           size={40}
           onPress={() => this.props.navigation.navigate('IamA')}
         /> */}
-        <Text onPress={() => enableNotifsfunc(enableNotifs)}>{'->'}</Text>
+        <TouchableOpacity
+                style={{
+                  backgroundColor: nextPage,
+                  width: 70,
+                  height: 45,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 50,
+                }}
+                color={Colors.white}
+                size={40}
+                onPress={() => {
+                  //   this.storeUser();
+                  enableNotifsfunc(enableNotifs);
+                  props.navigation.navigate('IamA', {enableNotifs});
+                  // this.props.navigation.navigate('Verified')
+                  // source={require('../assets/profile.png')}
+                }}>
+                <Image source={require('../assets/arrow-right.png')}></Image>
+              </TouchableOpacity>
       </View>
       <Modal
         animationType="slide"

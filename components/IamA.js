@@ -10,6 +10,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Image
 } from 'react-native';
 
 const IamA = props => {
@@ -19,7 +20,7 @@ const IamA = props => {
   let mentor = false;
   let mentee = false;
   let both = false;
-
+  const [nextPage, setNextPage] = useState('lightgrey');
   let [backgroundColorMentor, setbackgroundColorMentor] =
     useState('transparent');
   let [colorMentor, setcolorMentor] = useState('#7F5AF0');
@@ -82,6 +83,9 @@ const IamA = props => {
         setbackgroundColorMentee('transparent'), setcolorMentee('#7F5AF0');
         setbackgroundColorBoth('transparent'), setcolorBoth('#7F5AF0');
         setbackgroundColorMentor('transparent'), setcolorMentor('#7F5AF0');
+    }
+    if( mentor || mentee || both ){
+      setNextPage('#7F5AF0')
     }
   };
 
@@ -165,23 +169,31 @@ const IamA = props => {
         </Text>
       </TouchableOpacity>
       <View style={{position: 'absolute', bottom: 26, right: 10}}>
-        <IconButton
-          style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-          icon="arrow-right"
-          color={Colors.white}
-          size={40}
-          onPress={() => 
-            {      
-            if (select) {
-              // console.log(props.route.params.enableNotifs)
-              props.navigation.navigate('LookingFor', user);
-            } 
-            if (!select) {
-              alert('Please select one');
-              return;
-            }}
-        }
-        />
+        
+        <TouchableOpacity
+                style={{
+                  backgroundColor: nextPage,
+                  width: 70,
+                  height: 45,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 50,
+                }}
+                color={Colors.white}
+                size={40}
+                onPress={() => {
+                  {      
+                    if (select) {
+                      // console.log(props.route.params.enableNotifs)
+                      props.navigation.navigate('LookingFor', user);
+                    } 
+                    if (!select) {
+                      alert('Please select one');
+                      return;
+                    }}
+                }}>
+                <Image source={require('../assets/arrow-right.png')}></Image>
+              </TouchableOpacity>
       </View>
     </View>
   );

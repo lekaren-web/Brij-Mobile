@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
+  Image
 } from 'react-native';
 import Option from './option';
 import {
@@ -23,7 +24,8 @@ import CheckBox from '@react-native-community/checkbox';
 const Myethnicity = props => {
 
   const [arr, setArr] = useState([]);
-  const [ethnicityVisible, setethnicityVisible] = useState(false)
+  const [ethnicityVisible, setethnicityVisible] = useState(false);
+  const [nextPage, setNextPage] = useState('lightgrey');
   return (
     <SafeAreaView style={styles.container}>
       <View style={{height: '100%'}}>
@@ -76,7 +78,10 @@ const Myethnicity = props => {
               alignContent: 'center',
             }}
             onSelectedValuesChange={
-              selectedValues => setArr(selectedValues)
+              selectedValues => {
+                setArr(selectedValues);
+                setNextPage('#7F5AF0')
+              }
               // this._groupButtonOnSelectedValuesChange(selectedValues)
             }
           />
@@ -111,19 +116,24 @@ const Myethnicity = props => {
           </Text>
         </View>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+          <TouchableOpacity
+            style={{
+              backgroundColor: nextPage,
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
-              //   uncomment the alert when data is connected
-              // alert('Please select at least 3');
               props.route.params.ethnicity = arr
               props.route.params.ethnicityVisible = ethnicityVisible
               props.navigation.navigate('Mysexuality', props.route.params)
-            }}
-          />
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

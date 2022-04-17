@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
+  Image
 } from 'react-native';
 import Option from './option';
 import {
@@ -28,7 +29,8 @@ const MyInterests = props => {
 
   //   }
   // componentDidMount(){
-  const [arr, setArr] = useState([])
+  const [arr, setArr] = useState([]);
+  const [nextPage, setNextPage] = useState('lightgrey');
   //   // console.log(props.route.params)
   // }
   return (
@@ -37,89 +39,98 @@ const MyInterests = props => {
         {/* first component */}
         <View style={styles.component1}>
           <Text style={styles.headerText}>My interests</Text>
-          <Text style={styles.subText}>Highlight your areas or expertise or aspirational interest.</Text>
+          <Text style={styles.subText}>
+            Highlight your areas or expertise or aspirational interest.
+          </Text>
         </View>
 
         {/*  second component */}
         <View style={styles.options}>
-            <ScrollView>
-          <SelectMultipleGroupButton
-            multiple={true}
-            group={[
-              {value: 'Creative Direction'},
-              {value: 'Performer'},
-              {value: 'Engineer'},
-              {value: 'PR'},
-              {value: 'Sound Designer'},
-              {value: 'Audio Engineer'},
-              {value: 'Graphic Designer'},
-              {value: 'Producer'},
-              {value: 'A&R'},
-              {value: 'Publisher'},
-              {value: 'Manager'},
-              {value: 'Mixer'},
-              {value: 'Promoter'},
-              {value: 'Photographer'},
-              {value: 'Accompanist'},
-              {value: 'Arranger'},
-              {value: 'Security'},
-              {value: 'Director'},
-              {value: 'Composer'},
-              {value: 'Record Executive'},
-              {value: 'Album Cover Designer'},
-              {value: 'Artist Development'},
-              {value: 'Artist Relations'},
-              {value: 'Entertainment Law'},
-            ]}
-            defaultSelectedIndexes={[0]}
-            textStyle={{fontSize: 18, textAlign: 'center'}}
-            buttonViewStyle={{
-              alignItems: 'flex-start',
-              borderWidth: 2,
-              borderRadius: 27,
-              borderColor: '#7F5AF0',
-              textAlign: 'center',
-              margin: 3
-            }}
-            highLightStyle={{
-              textColor: '#30467B',
-              backgroundColor: 'transparent',
-              borderRadius: 27,
-              borderWidth: 1,
-              borderColor: '#7F5AF0',
-              textAlign: 'center',
-              fontsize: 14,
-              borderTintColor: 'transparent',
-              textTintColor: 'white',
-              backgroundTintColor: '#7F5AF0',
-            }}
-            containerViewStyle={{
-              width: '100%',
-              justifyContent: 'flex-start',
-              alignContent: 'center',
-            }}
-            onSelectedValuesChange={selectedValues =>
-              setArr(selectedValues)
-              // this._groupButtonOnSelectedValuesChange(selectedValues)
-            }
-          />
+          <ScrollView>
+            <SelectMultipleGroupButton
+              multiple={true}
+              group={[
+                {value: 'Creative Direction'},
+                {value: 'Performer'},
+                {value: 'Engineer'},
+                {value: 'PR'},
+                {value: 'Sound Designer'},
+                {value: 'Audio Engineer'},
+                {value: 'Graphic Designer'},
+                {value: 'Producer'},
+                {value: 'A&R'},
+                {value: 'Publisher'},
+                {value: 'Manager'},
+                {value: 'Mixer'},
+                {value: 'Promoter'},
+                {value: 'Photographer'},
+                {value: 'Accompanist'},
+                {value: 'Arranger'},
+                {value: 'Security'},
+                {value: 'Director'},
+                {value: 'Composer'},
+                {value: 'Record Executive'},
+                {value: 'Album Cover Designer'},
+                {value: 'Artist Development'},
+                {value: 'Artist Relations'},
+                {value: 'Entertainment Law'},
+              ]}
+              defaultSelectedIndexes={[0]}
+              textStyle={{fontSize: 18, textAlign: 'center'}}
+              buttonViewStyle={{
+                alignItems: 'flex-start',
+                borderWidth: 2,
+                borderRadius: 27,
+                borderColor: '#7F5AF0',
+                textAlign: 'center',
+                margin: 3,
+              }}
+              highLightStyle={{
+                textColor: '#30467B',
+                backgroundColor: 'transparent',
+                borderRadius: 27,
+                borderWidth: 1,
+                borderColor: '#7F5AF0',
+                textAlign: 'center',
+                fontsize: 14,
+                borderTintColor: 'transparent',
+                textTintColor: 'white',
+                backgroundTintColor: '#7F5AF0',
+              }}
+              containerViewStyle={{
+                width: '100%',
+                justifyContent: 'flex-start',
+                alignContent: 'center',
+              }}
+              onSelectedValuesChange={
+                selectedValues => {
+                  setArr(selectedValues);
+                  setNextPage('#7F5AF0');
+                }
+                // this._groupButtonOnSelectedValuesChange(selectedValues)
+              }
+            />
           </ScrollView>
         </View>
 
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+          <TouchableOpacity
+            style={{
+              backgroundColor: nextPage,
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
-              //   uncomment the alert when data is connected
-              // alert('Please select at least 3');
-              props.route.params.interests= arr;
-            //   console.log(props.route.params)
+              props.route.params.interests = arr;
               props.navigation.navigate('InclusionSurvey', props.route.params);
-            }}
-          />
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

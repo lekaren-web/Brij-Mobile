@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 import Option from './option';
 import {
@@ -21,6 +22,7 @@ import {
 } from 'react-native-selectmultiple-button';
 const InclusionSurvery = props => {
   const [inclusionSurvery, setInclusionSurvery] = useState('');
+  const [nextPage, setNextPage] = useState('lightgrey');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -41,32 +43,39 @@ const InclusionSurvery = props => {
           multiline
           placeholderTextColor="#30467B99"
           style={styles.Input}
-          onChangeText={(val) => setInclusionSurvery(val)}
+          onChangeText={val => {
+            setInclusionSurvery(val);
+            setNextPage('#7F5AF0')
+          }}
           placeholder="Use this space to write down your experience."></TextInput>
         <TouchableOpacity
           onPress={() => {
             props.route.params.inclusionSurvery = inclusionSurvery;
             // props.navigation.navigate('AddPhotos', props.route.params);
-            console.log(props.route.params)
+            console.log(props.route.params);
           }}>
           <Text style={{marginTop: 60, color: '#8390B0', fontWeight: '400'}}>
             Skip survey
           </Text>
         </TouchableOpacity>
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+          <TouchableOpacity
+            style={{
+              backgroundColor: nextPage,
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
-              //   uncomment the alert when data is connected
-              // alert('Please select at least 3');
               props.route.params.inclusionSurvery = inclusionSurvery;
               props.navigation.navigate('AddPhotos', props.route.params);
-            //   console.log(props.route.params)
-            }}
-          />
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -126,6 +135,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignSelf: 'center',
     alignItems: 'center',
+    alignContent: 'center'
   },
 });
 export default InclusionSurvery;

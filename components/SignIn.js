@@ -80,7 +80,6 @@ class SignIn extends Component {
           // }
         })
         
-        // await Amplify.Auth.rememberDevice()
         this.props.navigation.navigate('MyProfile')
       } catch (error) {
         alert(error);

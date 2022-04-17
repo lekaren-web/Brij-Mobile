@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Text,
   Modal,
+  Image
 } from 'react-native';
 import ScrollPicker from 'react-native-wheel-scroll-picker';
 import moment from 'moment';
@@ -19,9 +20,9 @@ class Birthday extends Component {
     this.state = {
       day: '',
       modalVisible: false,
-      age: 0,
+      age: 19,
       month: '',
-      birthday: '',
+      birthday: 'February 2, 2003',
       year: '',
       months: [
         'January',
@@ -71,71 +72,108 @@ class Birthday extends Component {
         '31',
       ],
       years: [
-        '1962',
-        '1963',
-        '1964',
-        '1965',
-        '1966',
-        '1967',
-        '1968',
-        '1969',
-        '1970',
-        '1971',
-        '1972',
-        '1973',
-        '1974',
-        '1975',
-        '1976',
-        '1977',
-        '1978',
-        '1979',
-        '1980',
-        '1981',
-        '1982',
-        '1983',
-        '1984',
-        '1985',
-        '1986',
-        '1987',
-        '1988',
-        '1989',
-        '1990',
-        '1991',
-        '1992',
-        '1993',
-        '1994',
-        '1995',
-        '1996',
-        '1997',
-        '1998',
-        '1999',
-        '2000',
-        '2001',
-        '2002',
-        '2003',
         '2004',
-        '2005',
-        '2006',
-        '2007',
-        '2008',
-        '2009',
-        '2010',
-        '2011',
-        '2012',
-        '2013',
-        '2014',
-        '2015',
-        '2016',
-        '2017',
-        '2018',
-        '2019',
-        '2020',
-        '2021',
-        '2022',
+        '2003',
+        '2002',
+        '2001',
+        '2000',
+        '1999',
+        '1998',
+        '1997',
+        '1996',
+        '1995',
+        '1994',
+        '1993',
+        '1992',
+        '1991',
+        '1990',
+        '1989',
+        '1988',
+        '1987',
+        '1986',
+        '1985',
+        '1984',
+        '1983',
+        '1982',
+        '1981',
+        '1980',
+        '1979',
+        '1978',
+        '1977',
+        '1976',
+        '1975',
+        '1974',
+        '1973',
+        '1972',
+        '1971',
+        '1970',
+        '1969',
+        '1968',
+        '1967',
+        '1966',
+        '1965',
+        '1964',
+        '1963',
+        '1962',
       ],
+      reverseYear: [
+        '2004',
+        '2003',
+        '2002',
+        '2001',
+        '2000',
+        '1999',
+        '1998',
+        '1997',
+        '1996',
+        '1995',
+        '1994',
+        '1993',
+        '1992',
+        '1991',
+        '1990',
+        '1989',
+        '1988',
+        '1987',
+        '1986',
+        '1985',
+        '1984',
+        '1983',
+        '1982',
+        '1981',
+        '1980',
+        '1979',
+        '1978',
+        '1977',
+        '1976',
+        '1975',
+        '1974',
+        '1973',
+        '1972',
+        '1971',
+        '1970',
+        '1969',
+        '1968',
+        '1967',
+        '1966',
+        '1965',
+        '1964',
+        '1963',
+        '1962',
+
+
+
+
+        
+      ]
+  
     };
   }
 
+  reverseYear(){
+    this.state.years.reverse()
+    this.setState({reverseYear: this.state.years.reverse() })
+  }
   async editBirthday() {
     if (this.state.birthday) {
       this.props.navigation.navigate('MyLocation');
@@ -151,6 +189,7 @@ class Birthday extends Component {
       this.state.month.length &&
       this.state.year.length
     ) {
+      
       this.state.birthday =
         this.state.month + ' ' + this.state.day + ', ' + this.state.year;
       //   const age =
@@ -174,6 +213,8 @@ class Birthday extends Component {
       //   console.log(years);
       this.state.age = years;
       return years;
+    } else {
+      return this.state.age
     }
   }
 
@@ -204,6 +245,7 @@ class Birthday extends Component {
             onValueChange={(data, selectedIndex) => {
               //
               this.setState({month: data});
+              
             }}
             wrapperHeight={180}
             wrapperWidth={150}
@@ -219,8 +261,8 @@ class Birthday extends Component {
             transparent={true}
             visible={this.state.modalVisible}
             onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              this.setModalVisible(!modalVisible);
+              
+              this.setModalVisible(!this.state.modalVisible);
             }}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
@@ -256,7 +298,7 @@ class Birthday extends Component {
                 </Text>
                 {/* <Pressable
                 style={[styles.button, styles.buttonClose]}
-                onPress={() => this.setModalVisible(!modalVisible)}
+                onPress={() => this.setModalVisible(!this.state.modalVisible)}
               >
                 <Text style={styles.textStyle}>Hide Modal</Text>
               </Pressable> */}
@@ -274,6 +316,7 @@ class Birthday extends Component {
                   style={styles.button2}
                   onPress={() => {
                     this.setModalVisible(false), this.editBirthday();
+                    this.props.navigation.navigate('MyLocation', this.props.route.params)
                   }}>
                   <Text
                     style={{
@@ -310,7 +353,7 @@ class Birthday extends Component {
 
           <ScrollPicker
             style={styles.YPicker}
-            dataSource={this.state.years}
+            dataSource={this.state.reverseYear}
             selectedIndex={1}
             renderItem={(data, index, isSelected) => {
               //
@@ -333,23 +376,33 @@ class Birthday extends Component {
         <Text style={styles.TopicTitleage}>Age {this.setAge()}</Text>
         <Text style={styles.TopicTitle2}>This cannot be changed later</Text>
         <View style={{position: 'absolute', bottom: 30, right: 10}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#7F5AF0',
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
-              //  this.setModalVisible(true);
+            
+               //  this.setModalVisible(true);
               if (this.state.age === 0){
                 alert('Please include your birth date')
               } else {
+                this.setModalVisible(!this.state.modalVisible);
                 this.props.route.params.age = this.state.age
-              // console.log('click', this.props.route.params);
-              this.props.navigation.navigate('MyLocation', this.props.route.params)
+                this.props.route.params.birthday = this.state.birthday
+              
               }
               
-            }}
-          />
+              
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
         {/* </View> */}
       </View>

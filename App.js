@@ -105,7 +105,6 @@ const signUpConfig = {
 };
 const usernameAttributes = 'My user name';
 
-console.log('hi', Auth.currentAuthenticatedUser())
 
 export default App 
   // {

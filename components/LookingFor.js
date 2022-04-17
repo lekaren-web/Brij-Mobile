@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
+  Image
 } from 'react-native';
 import Option from './option';
 import {
@@ -30,13 +31,14 @@ const LookingFor = props => {
     'Portfolio Creation',
   ];
   const optionList2 = ['Interview Tips', 'Project Advice', 'Networking Advice'];
+  const [nextPage, setNextPage] = useState('lightgrey')
   //   constructor() {
   //     super();
 
   //   }
   // componentDidMount(){
   const [user, setUser] = useState(props.route.params);
-  const [arr, setArr] = useState([])
+  const [arr, setArr] = useState([]);
   //   // console.log(props.route.params)
   // }
 
@@ -81,7 +83,7 @@ const LookingFor = props => {
               borderRadius: 27,
               borderColor: '#7F5AF0',
               textAlign: 'center',
-              margin: 5
+              margin: 5,
             }}
             highLightStyle={{
               textColor: '#30467B',
@@ -100,25 +102,42 @@ const LookingFor = props => {
               justifyContent: 'space-between',
               alignContent: 'center',
             }}
-            onSelectedValuesChange={selectedValues =>
-              setArr(selectedValues)
+            onSelectedValuesChange={
+              selectedValues => {setArr(selectedValues)
+              setNextPage('#7F5AF0')}
               // this._groupButtonOnSelectedValuesChange(selectedValues)
             }
           />
         </View>
 
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+
+          <TouchableOpacity
+            style={{
+              backgroundColor: nextPage,
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
-              //   uncomment the alert when data is connected
-              // alert('Please select at least 3');
-              props.navigation.navigate('Myname', {enableNotifs: props.route.params.enableNotifs, mentor: props.route.params.mentor,  mentee: props.route.params.mentee,  both: props.route.params.both, lookingFor: arr});
-            }}
-          />
+            
+                //   uncomment the alert when data is connected
+                // alert('Please select at least 3');
+                props.navigation.navigate('Myname', {
+                  enableNotifs: props.route.params.enableNotifs,
+                  mentor: props.route.params.mentor,
+                  mentee: props.route.params.mentee,
+                  both: props.route.params.both,
+                  lookingFor: arr,
+                })
+              
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>

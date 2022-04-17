@@ -1,5 +1,5 @@
 // screens/AddUserScreen.js
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import {IconButton, Colors} from 'react-native-paper';
 // import {ButtonGroup} from '@rneui/themed';
 import {
@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   ImageBackground,
+  Image,
 } from 'react-native';
 import image from '../assets/profile.png';
 import image2 from '../assets/profile2.png';
@@ -22,18 +23,44 @@ import {
   SelectMultipleButton,
   SelectMultipleGroupButton,
 } from 'react-native-selectmultiple-button';
+import {launchImageLibrary} from 'react-native-image-picker';
 const AddPhotos = props => {
-  // constructor(props) {
-  // super(props);
-
-  //   constructor() {
-  //     super();
-
-  //   }
-  // componentDidMount(){
   const [arr, setArr] = useState([]);
-  //   // console.log(props.route.params)
-  // }
+  const [nextPage, setNextPage] = useState('lightgrey');
+  const [pictures, setPictures] = useState([]);
+
+  handleChoosePhoto = () => {
+    setNextPage('#7F5AF0')
+    launchImageLibrary({noData: true}, response => {
+      // console.log(response);
+      if (response) {
+        // setPhoto(response);
+        if (!pictures.length) {
+          setPictures(response.assets);
+        } else {
+          if (response.assets) {
+            response.assets.map(e => {
+              setPictures([...pictures, e]);
+            });
+           
+          }
+        }
+      }
+    });
+  };
+  //  handleUploadPhoto(){
+  //     fetch(`${SERVER_URL}/api/upload`, {
+  //       method: 'POST',
+  //       body: createFormData(photo, { userId: '123' }),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((response) => {
+  //         console.log('response', response);
+  //       })
+  //       .catch((error) => {
+  //         console.log('error', error);
+  //       });
+  //   };
   return (
     <SafeAreaView style={styles.container}>
       <View style={{height: '100%'}}>
@@ -46,70 +73,149 @@ const AddPhotos = props => {
         {/*  second component */}
         <View style={styles.outerPhoto}>
           <View style={styles.thirdPhotoComponent}>
-            <TouchableOpacity
-              onPress={() => {
-                handleChoosePhoto();
-              }}
-              style={styles.innerThirdPhoto}>
-              <Text style={styles.photoInput}>+</Text>
-            </TouchableOpacity>
+            {pictures.length ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <ImageBackground
+                  resizeMode="cover"
+                  source={{uri: pictures[0].uri}}
+                  style={{width: '100%', height: '100%'}}></ImageBackground>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <Text style={styles.photoInput}>+</Text>
+              </TouchableOpacity>
+            )}
+            {pictures.length >= 2 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <ImageBackground
+                  resizeMode="cover"
+                  source={{uri: pictures[1].uri}}
+                  style={{width: '100%', height: '100%'}}></ImageBackground>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <Text style={styles.photoInput}>+</Text>
+              </TouchableOpacity>
+            )}
 
-            <TouchableOpacity
-              onPress={() => {
-                handleChoosePhoto();
-              }}
-              style={styles.innerThirdPhoto}>
-              <Text style={styles.photoInput}>+</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                handleChoosePhoto();
-              }}
-              style={styles.innerThirdPhoto}>
-              <Text style={styles.photoInput}>+</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                handleChoosePhoto();
-              }}
-              style={styles.innerThirdPhoto}>
-              <Text style={styles.photoInput}>+</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                handleChoosePhoto();
-              }}
-              style={styles.innerThirdPhoto}>
-              <Text style={styles.photoInput}>+</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                handleChoosePhoto();
-              }}
-              style={styles.innerThirdPhoto}>
-              <Text style={styles.photoInput}>+</Text>
-            </TouchableOpacity>
+            {pictures.length >= 3 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <ImageBackground
+                  resizeMode="cover"
+                  source={{uri: pictures[2].uri}}
+                  style={{width: '100%', height: '100%'}}></ImageBackground>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <Text style={styles.photoInput}>+</Text>
+              </TouchableOpacity>
+            )}
+            {pictures.length >= 4 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <ImageBackground
+                  resizeMode="cover"
+                  source={{uri: pictures[3].uri}}
+                  style={{width: '100%', height: '100%'}}></ImageBackground>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <Text style={styles.photoInput}>+</Text>
+              </TouchableOpacity>
+            )}
+            {pictures.length >= 5 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <ImageBackground
+                  resizeMode="cover"
+                  source={{uri: pictures[4].uri}}
+                  style={{width: '100%', height: '100%'}}></ImageBackground>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <Text style={styles.photoInput}>+</Text>
+              </TouchableOpacity>
+            )}
+            {pictures.length >= 6 ? (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <ImageBackground
+                  resizeMode="cover"
+                  source={{uri: pictures[5].uri}}
+                  style={{width: '100%', height: '100%'}}></ImageBackground>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  handleChoosePhoto();
+                }}
+                style={styles.innerPhoto}>
+                <Text style={styles.photoInput}>+</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
 
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
-          <IconButton
-            style={{backgroundColor: 'lightgray', width: 80, height: 45}}
-            icon="arrow-right"
+          <TouchableOpacity
+            style={{
+              backgroundColor: nextPage,
+              width: 70,
+              height: 45,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 50,
+            }}
             color={Colors.white}
             size={40}
             onPress={() => {
-              //   uncomment the alert when data is connected
-              // alert('Please select at least 3');
-            //   props.route.params.interests = arr;
-              //   console.log(props.route.params)
+              props.route.params.pictures = pictures;
+              // console.log(props.route.params)
               props.navigation.navigate('InclusivityAgreement', props.route.params);
-            }}
-          />
+            }}>
+            <Image source={require('../assets/arrow-right.png')}></Image>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -185,37 +291,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
-  leftPhoto: {
-    width: '65%',
-    height: 238,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  bigPhoto: {
-    width: '100%',
-    height: '100%',
-  },
-  rightPhotos: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: 200,
-    width: '35%',
-    borderRadius: 10,
-    padding: 0,
-    marginLeft: 8,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  rightImage: {
-    width: '85%',
-    height: '57%',
-    borderRadius: 10,
-    marginBottom: 12,
-    overflow: 'hidden',
-    backgroundColor: '#D9CEFB80',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   thirdPhotoComponent: {
     display: 'flex',
     flexDirection: 'row',
@@ -226,7 +301,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'space-between',
   },
-  innerThirdPhoto: {
+  innerPhoto: {
     borderRadius: 10,
     backgroundColor: '#D9CEFB80',
     width: '30%',
@@ -234,6 +309,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 5,
+    overflow: 'hidden',
   },
   photoInput: {
     fontSize: 35,

@@ -110,7 +110,7 @@ class SignUpEmail extends Component {
           //     // other custom attributes
           // }
         })
-        Amplify.Auth.rememberDevice()
+      
         this.props.navigation.navigate('EmailVerify', {username: this.state.email, password: this.state.password})
       } catch (error) {
         alert(error);

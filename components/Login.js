@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,10 +13,14 @@ import {
   BackgroundImage,
   Animated,
 } from 'react-native';
-
+import {Auth, DataStore} from 'aws-amplify';
+import {User} from '../src/models';
 const Login = ({navigation}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
   const wordslist = ['here', 'there'];
+  useEffect( async () => {
+    console.log('ME:',await Auth.currentAuthenticatedUser())
+  }, [])
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -81,7 +85,7 @@ const Login = ({navigation}) => {
 
             <TouchableOpacity
               style={styles.signin}
-              onPress={() => navigation.navigate('Notifs')}>
+              onPress={() => navigation.navigate('SignIn')}>
               <Text 
               style={styles.signinText}>Sign in</Text>
             </TouchableOpacity>
