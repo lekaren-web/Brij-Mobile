@@ -27,7 +27,8 @@ const Myethnicity = props => {
   const [ethnicityVisible, setethnicityVisible] = useState(false);
   const [nextPage, setNextPage] = useState('lightgrey');
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{flexGrow: 1}}>
+      <View style={styles.container}>
       <View style={{height: '100%'}}>
         {/* first component */}
         <View style={styles.component1}>
@@ -56,8 +57,10 @@ const Myethnicity = props => {
               borderRadius: 27,
               borderColor: '#7F5AF0',
               textAlign: 'center',
-              width: '45%',
-              padding: 0.2,
+              width: '47.1%',
+              padding: 0.5,
+              height: 40,
+              fontWeight: '600'
 
             }}
             highLightStyle={{
@@ -136,7 +139,9 @@ const Myethnicity = props => {
           </TouchableOpacity>
         </View>
       </View>
+      </View>
     </SafeAreaView>
+
   );
 };
 //   }
@@ -159,8 +164,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // alignItems: 'center',
     alignContent: 'center',
-    padding: 10,
-    margin: 10,
+    padding: 20,
+    margin: 0,
   },
   component1: {
     display: 'flex',

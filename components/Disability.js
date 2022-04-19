@@ -71,46 +71,48 @@ const Disability = props => {
               textAlign: 'center',
               alignItems: 'center',
             }}
-            onSelectedValuesChange={selectedValues =>
-              {
-                setYesNo(selectedValues.toString());
-                setNextPage('#7F5AF0')
-              }
-            }
+            onSelectedValuesChange={selectedValues => {
+              setYesNo(selectedValues.toString());
+              setNextPage('#7F5AF0');
+            }}
           />
         </View>
 
-        <View style={styles.checkboxContainer}>
-          <View
-            style={{
-              borderWidth: 1,
-              borderColor: '#000',
-              height: 22,
-              width: 22,
-              borderRadius: 5,
-              marginRight: 10
-            }}>
-            <CheckBox
-              hideBox
-              checked={disabilityVisible}
-              onPress={() => {
-                setdisabilityVisible(!disabilityVisible);
-              }}
-              style={{height: 20, width: 20}}
-
-            />
+        {yesNo === 'Yes' ? (
+          <View style={styles.checkboxContainer}>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: '#000',
+                height: 22,
+                width: 22,
+                borderRadius: 5,
+                marginRight: 10,
+              }}>
+              <CheckBox
+                hideBox
+                checked={disabilityVisible}
+                onPress={() => {
+                  setdisabilityVisible(!disabilityVisible);
+                }}
+                style={{height: 20, width: 20}}
+              />
+            </View>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                color: '#30467B',
+                marginBottom: 3,
+              }}>
+              Visible on profile
+            </Text>
           </View>
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 'bold',
-              color: '#30467B',
-              marginBottom: 3,
-            }}>
-            Visible on profile
-          </Text>
-        </View>
-        <View style={{position: 'absolute', bottom: 20, right: 0}}>
+        ) : (
+          <View></View>
+        )}
+
+        <View style={{position: 'absolute', bottom: 40, right: 0}}>
           <TouchableOpacity
             style={{
               backgroundColor: nextPage,

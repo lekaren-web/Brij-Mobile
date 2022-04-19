@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
+  Alert
 } from 'react-native';
 import Option from './option';
 import {
@@ -62,7 +63,8 @@ const InclusivityAgreement = props => {
   }
   const save = async (val) => {
     const userAuth = await Auth.currentAuthenticatedUser();
-    await DataStore.save(
+    console.log(props.route.params)
+   try { await DataStore.save(
       new User({
         name: props.route.params.name,
         birthday: props.route.params.birthday,
@@ -103,9 +105,10 @@ const InclusivityAgreement = props => {
         freemium: true,
         active: true,
         location: props.route.params.location
-      ,
       }),
-    );
+    )}catch(e){
+      Alert.alert('Oops', e.message)
+    }
   };
 
   return (

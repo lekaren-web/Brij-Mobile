@@ -15,11 +15,7 @@ import {
   Image,
   ImageBackground,
 } from 'react-native';
-// import { auth } from "firebase";
-// import * as fb from "firebase";
-// import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
-// console.log('auth', auth());
-// console.log('getAuth', getAuth);
+
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -34,9 +30,13 @@ import {PanGestureHandler} from 'react-native-gesture-handler';
 import like from '../assets/like.png';
 import dislike from '../assets/dislike.png';
 import {Auth, DataStore} from 'aws-amplify';
-import {User} from '../src/models';
-const Explore = (props) => {
-  const[users, setUsers] = useState([])
+import {User, Match} from '../src/models';
+import {SQLiteAdapter} from '@aws-amplify/datastore-storage-adapter';
+// DataStore.configure({
+//   storageAdapter: SQLiteAdapter,
+// });
+const Explore = props => {
+  const [users, setUsers] = useState([]);
   const [currIndex, setCurrIndex] = useState(0);
   const [nextIndex, setnextIndex] = useState(currIndex + 1);
   const currentProfile = users[currIndex];
@@ -45,7 +45,8 @@ const Explore = (props) => {
   const translateX = useSharedValue(0);
   const Rotation = 60;
   const hiddenTranslateX = 2 * screenWidth;
-  const[currentUser, setCurrentUser] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null);
+  const [me, setMe] = useState(null);
   const rotate = useDerivedValue(
     () =>
       interpolate(translateX.value, [0, -hiddenTranslateX], [0, Rotation]) +
@@ -79,22 +80,17 @@ const Explore = (props) => {
       [1, 0.8, 1],
     ),
   }));
-
+  // useEffect(() => {
+  //   if (Rotation > 60) {
+  //   }
+  // }, [rotate]);
   const likeStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-        translateX.value,
-        [0, hiddenTranslateX / 4],
-        [0, 1],
-      ),
-  }))
+    opacity: interpolate(translateX.value, [0, hiddenTranslateX / 4], [0, 1]),
+  }));
 
   const dislikeStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-        translateX.value,
-        [0, - hiddenTranslateX / 4],
-        [0, 1],
-      ),
-  }))
+    opacity: interpolate(translateX.value, [0, -hiddenTranslateX / 4], [0, 1]),
+  }));
 
   const SwipeVelocity = 800;
   // gesture handler hook to get feedback of user touch and start dragging
@@ -117,43 +113,43 @@ const Explore = (props) => {
         {},
         () => runOnJS(setCurrIndex)(currIndex + 1),
       );
+      const onSwipe  = event.velocityX > 0 ? onSwipeRight : onSwipeLeft
+      onSwipe && runOnJS(onSwipe)();
     },
   });
+
+  //  on first load get ME
+  const fetchCurrentUserLoggedIn = async () => {
+    setMe(await Auth.currentAuthenticatedUser());
+  };
+  useEffect(() => {
+    fetchCurrentUserLoggedIn();
+  }, []);
+
   useEffect(() => {
     translateX.value = 0;
     setnextIndex(currIndex + 1);
   }, [currIndex]);
+
+  // set current user youre looking at
   useEffect(() => {
     setCurrentUser(currentProfile);
-  }, [currentProfile]);
+  }, [currentProfile, setCurrentUser]);
+// get all users from database
+  const getCurrUsers = async () => {
+    // const currentUser = await Auth.currentAuthenticatedUser();
+    const getusers = await DataStore.query(User);
+    setUsers(getusers);
+  };
 
   useEffect(() => {
-    const fetchUsers = async() => {
-      setUsers(await DataStore.query(User))
-    }
-    fetchUsers()
-  }, [])
-  //   render() {
-  //     if (this.state.isLoading) {
-  //       return (
-  //         <View style={styles.preloader}>
-  //           <ActivityIndicator size="large" color="#9E9E9E" />
-  //         </View>
-  //       );
-  //     }
-  const onSwipeLeft = async() => {
+    getCurrUsers();
+  }, [users]);
 
-    await DataStore.save(new Match({
-      User1Id: me.id,
-      User2Id: currentUser.id
-    }))
-  }
-  const onSwipeRight =() => {}
-
+  
   useEffect(() => {
     const getCurrUser = async () => {
       const currentUser = await Auth.currentAuthenticatedUser();
-
       const dbUsers = await DataStore.query(
         User,
         u => u.sub === currentUser.attributes.sub,
@@ -162,33 +158,84 @@ const Explore = (props) => {
       if (dbUsers.length < 0) {
         return;
       }
-      setUser(dbUsers[0])
 
+      dbUsers.map(e => {
+        if (e.sub === currentUser.attributes.sub) {
+          setMe(e);
+        }
+        return;
+      });
     };
     getCurrUser();
   }, []);
+  //   render() {
+  //     if (this.state.isLoading) {
+  //       return (
+  //         <View style={styles.preloader}>
+  //           <ActivityIndicator size="large" color="#9E9E9E" />
+  //         </View>
+  //       );
+  //     }
+  const onSwipeRight = async () => {
+    if (!currentUser || !me) {
+      return;
+    }
+    if (translateX.value) {
+      await DataStore.save(
+        new Match({
+          User1Id: me.id,
+          User2Id: currentUser.id,
+          isMatch: true,
+        }),
+      );
+    }
+
+      console.log('right');
+    // }
+  };
+
+  const onSwipeLeft = () => {
+    console.log('left')
+  };
+
+
+  
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor:'white',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: 'white'}}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        backgroundColor: 'white',
+      }}>
       {/* Top explore nav */}
       <View style={styles.upperNav}>
         {/* profile pic */}
         <View style={styles.profilePic}>
-          <ImageBackground
-            style={{width: '100%', height: '100%'}}
-            source={require('../assets/profile.png')}
-          />
+          {me ? (
+            <ImageBackground
+              style={{width: '100%', height: '100%'}}
+              source={{url: me.profilePic}}
+            />
+          ) : (
+            <View
+              style={{
+                backgroundColor: '#E4DFFA',
+                width: '100%',
+                height: '100%',
+              }}></View>
+          )}
         </View>
         {/* back to profile button */}
-        <TouchableOpacity style={styles.backButton} onPress={() => props.navigation.navigate('MyProfile')}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => props.navigation.navigate('MyProfile')}>
           <ImageBackground
-          onPress={() => props.navigation.navigate('MyProfile')}
+            onPress={() => props.navigation.navigate('MyProfile')}
             style={{width: '100%', height: '100%'}}
-            source={require('../assets/back.png')}
-          ></ImageBackground>
+            source={require('../assets/back.png')}></ImageBackground>
         </TouchableOpacity>
 
         {/* brij  */}
@@ -206,7 +253,7 @@ const Explore = (props) => {
       {/* react native reanimated and gesture handle */}
 
       {nextProfile && (
-        <View style={styles.nextCardContainer}>
+        <SafeAreaView style={styles.nextCardContainer}>
           <Animated.View style={[styles.cardContainer, nextCardStyle]}>
             <ImageBackground
               resizeMode="cover"
@@ -220,14 +267,12 @@ const Explore = (props) => {
                 display: 'flex',
                 justifyContent: 'flex-end',
               }}
-              source={require('../assets/profile.png')}>
+              source={{url: nextProfile.profilePic}}>
               <LinearGradient
                 colors={['#00000000', '#353839']}
                 style={{height: '100%', width: '100%'}}>
                 <View style={styles.userDescription}>
-                  <Text style={styles.descriptionName}>
-                    {nextProfile.name}
-                  </Text>
+                  <Text style={styles.descriptionName}>{nextProfile.name}</Text>
                   <View
                     style={{
                       display: 'flex',
@@ -241,30 +286,30 @@ const Explore = (props) => {
                       />
                     </View>
                     <Text style={styles.workplace}>
-                      {nextProfile.workplace}
+                      {nextProfile.occupation}
                     </Text>
                   </View>
                 </View>
               </LinearGradient>
             </ImageBackground>
           </Animated.View>
-        </View>
+        </SafeAreaView>
       )}
 
       {currentProfile ? (
         <PanGestureHandler onGestureEvent={gestureHandler}>
           {/*  */}
           <Animated.View style={[styles.cardContainer, cardStyle]}>
-              <Animated.Image
-                source={like}
-                style={[styles.like, {width: 60}, likeStyle]}
-                resizeMode="contain"
-              />
-              <Animated.Image
-                source={dislike}
-                style={[styles.dislike, {width: 50, height: 50}, dislikeStyle]}
-                resizeMode="contain"
-              />
+            <Animated.Image
+              source={like}
+              style={[styles.like, {width: 60}, likeStyle]}
+              resizeMode="contain"
+            />
+            <Animated.Image
+              source={dislike}
+              style={[styles.dislike, {width: 50, height: 50}, dislikeStyle]}
+              resizeMode="contain"
+            />
             <View>
               <ImageBackground
                 resizeMode="cover"
@@ -278,7 +323,7 @@ const Explore = (props) => {
                   display: 'flex',
                   justifyContent: 'flex-end',
                 }}
-                source={require('../assets/profile.png')}>
+                source={{url: currentProfile.profilePic}}>
                 <LinearGradient
                   colors={['#00000000', '#353839']}
                   style={{height: '100%', width: '100%'}}>
@@ -299,7 +344,7 @@ const Explore = (props) => {
                         />
                       </View>
                       <Text style={styles.workplace}>
-                        {currentProfile.workplace}
+                        {currentProfile.occupation}
                       </Text>
                     </View>
                   </View>
@@ -309,22 +354,32 @@ const Explore = (props) => {
           </Animated.View>
         </PanGestureHandler>
       ) : (
-        <View>
-          <Text>No more users</Text>
+        <View
+          style={{
+            display: 'flex',
+            height: '60%',
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}>
+          <Text style={{justifyContent: 'center', alignContent: 'center'}}>
+            No more users
+          </Text>
         </View>
-      )
-    
-    }
+      )}
 
       {/*  footer  */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.forumlogo}>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('Forum')}
+          style={styles.forumlogo}>
           <Image
             style={{width: '100%', height: '100%'}}
             source={require('../assets/forum-icon-grey.png')}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.talkspacelogo}>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('Audiospace')}
+          style={styles.talkspacelogo}>
           <Image
             style={{width: '100%', height: '100%'}}
             source={require('../assets/talkspace-icon-grey.png')}
@@ -337,7 +392,9 @@ const Explore = (props) => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.calendarlogo}>
+        <TouchableOpacity
+          onPress={() => props.navigation.navigate('Calendar')}
+          style={styles.calendarlogo}>
           <Image
             style={{width: '100%', height: '100%'}}
             source={require('../assets/calendar-icon-grey.png')}
@@ -345,7 +402,7 @@ const Explore = (props) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('Message')}
+          onPress={() => props.navigation.navigate('Message')}
           style={styles.messagelogo}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -369,7 +426,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     alignItems: 'center',
-    height: 60
+    height: 60,
+    zIndex: 100,
   },
   profilePic: {
     width: 40,
@@ -383,7 +441,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 15,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   brij: {
     textAlign: 'center',
@@ -404,7 +462,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     marginBottom: 60,
-    alignContent: 'center'
+    alignContent: 'center',
   },
   footer: {
     display: 'flex',
@@ -418,7 +476,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 5,
     position: 'absolute',
-    bottom: 15
+    bottom: 15,
   },
   forumlogo: {
     width: 30,
@@ -478,14 +536,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     zIndex: 1,
-    margin: 10
+    margin: 10,
   },
   dislike: {
     position: 'absolute',
     top: 10,
     right: 0,
     zIndex: 1,
-    margin: 10
+    margin: 10,
   },
 });
-export default Explore;
+export default Explore

@@ -25,24 +25,15 @@ const Message = props => {
   // useEffect(() => {
 
   // }, [])
-  const[usersMatched, setUsersMatched] = useState([]);
   const [matches, setMatches] = useState([]);
   const [messages, setMessages] = useState([]);
   //   }
-  const getCurrMatch = async () => {
-    // const currentUser = await Auth.currentAuthenticatedUser();
-    const getmatches = await DataStore.query(Match);
-    setMatches(getmatches);
-  };
-
-  useEffect(() => {
-    getCurrMatch();
-  }, [matches]);
   return (
-    <SafeAreaView styles={{flex: 1, backgroundColor: 'white'}}>
+    <SafeAreaView styles={{flexGrow: 1}}>
       <View style={styles.container}>
         <View style={styles.upperNav}>
           {/* profile pic */}
+          
           <View style={styles.profilePic}>
             <ImageBackground
               style={{width: '100%', height: '100%'}}
@@ -61,24 +52,60 @@ const Message = props => {
             />
           </View>
         </View>
-
+        
         {/* horizontal scroll for chat heads */}
         <Text style={styles.matches}>My Matches</Text>
+
         <View style={styles.chatHeads}>
           <ScrollView horizontal={true}>
-            {matches ? 
-            usersMatched.map((e) => (
-              <TouchableOpacity style={styles.chatHead}>
-                <ImageBackground
-                  style={{width: '100%', height: '100%'}}
-                  source={require('../assets/profile.png')}
-                />
-              </TouchableOpacity>
-            ))
-              
-             : (
-              {}
-            )}
+            <TouchableOpacity style={styles.chatHead}>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../assets/profile.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.chatHead}>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../assets/profile.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.chatHead}>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../assets/profile.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.chatHead}>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../assets/profile.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.chatHead}>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../assets/profile.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.chatHead}>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../assets/profile.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.chatHead}>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../assets/profile.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.chatHead}>
+              <ImageBackground
+                style={{width: '100%', height: '100%'}}
+                source={require('../assets/profile.png')}
+              />
+            </TouchableOpacity>
           </ScrollView>
         </View>
 
@@ -133,27 +160,26 @@ const Message = props => {
             )}
           </ScrollView>
         </View>
+        
       </View>
       <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.forumlogo}
-          onPress={() => props.navigation.navigate('Forum')}>
+        <TouchableOpacity 
+        onPress={() => props.navigation.navigate('Forum')}
+        style={styles.forumlogo}>
           <Image
             style={{width: '100%', height: '100%'}}
             source={require('../assets/forum-icon-grey.png')}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => props.navigation.navigate('Audiospace')}
-          style={styles.talkspacelogo}>
+        <TouchableOpacity style={styles.talkspacelogo}>
           <Image
             style={{width: '100%', height: '100%'}}
-            source={require('../assets/talkspace-icon-grey.png')}
+            source={require('../assets/talkspace-icon-purple.png')}
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('Explore')}
-          style={[styles.explorelogo]}>
+        onPress={() => props.navigation.navigate('Explore')}
+         style={[styles.explorelogo]}>
           <Image
             style={{width: '100%', height: '100%'}}
             source={require('../assets/brij-logo-grey.png')}
@@ -161,18 +187,20 @@ const Message = props => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.calendarlogo}
-          onPress={() => props.navigation.navigate('Calendar')}>
+        onPress={() => props.navigation.navigate('Calendar')}
+         style={styles.calendarlogo}>
           <Image
             style={{width: '100%', height: '100%'}}
             source={require('../assets/calendar-icon-grey.png')}
           />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.messagelogo}>
+        <TouchableOpacity
+        onPress={() => props.navigation.navigate('Message')}
+          style={styles.messagelogo}>
           <Image
             style={{width: '100%', height: '100%'}}
-            source={require('../assets/chat-icon-purple.png')}
+            source={require('../assets/chat-icon-grey.png')}
           />
         </TouchableOpacity>
       </View>
@@ -185,7 +213,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     padding: 10,
-    backgroundColor: 'white',
   },
   chatHeads: {
     display: 'flex',
@@ -261,6 +288,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     marginBottom: 10,
+   
   },
   description: {
     margin: 10,

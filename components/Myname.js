@@ -12,7 +12,8 @@ import {
   Text,
   TouchableOpacity,
   SafeAreaView,
-  Image
+  Image,
+  Alert
 } from "react-native";
 ;
 
@@ -30,7 +31,7 @@ const Myname = (props) => {
             <Text style={styles.heading}>My Name is</Text>
             <TextInput
             style={styles.input}
-            placeholder="Please insert your name"
+            placeholder=""
             value={name}
             onChangeText={(val) => 
               {
@@ -40,7 +41,7 @@ const Myname = (props) => {
             }
             >
             </TextInput>
-            <View style={{position: 'absolute', bottom:'7%', right: 0}}>
+            <View style={{position: 'absolute', bottom:'10%', right: 0}}>
              <TouchableOpacity
             style={{
               backgroundColor: nextPage,
@@ -55,9 +56,13 @@ const Myname = (props) => {
             onPress={() => {
             
                 //   uncomment the alert when data is connected
-                // alert('Please select at least 3');
+                if(!name){
+                  Alert.alert('Please provide your name')
+                } else {
                 props.route.params.name = name
-                props.navigation.navigate("Mybirthday", props.route.params )
+                props.navigation.navigate("Mybirthday", props.route.params );
+                }
+
               
             }}>
             <Image source={require('../assets/arrow-right.png')}></Image>
@@ -90,7 +95,9 @@ const styles = StyleSheet.create({
         marginTop: '-40%',
         borderBottomWidth: 1,
         borderBottomColor: '#30467B',
-        fontSize: 25
+        fontSize: 25,
+        color:'#30467B',
+        fontWeight: '300'
     }
 });
 export default Myname;

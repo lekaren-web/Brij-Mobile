@@ -89,7 +89,7 @@ const Mygender = props => {
           />
         </View>
 
-        <View style={{position: 'absolute', bottom: 20, right: 0}}>
+        <View style={{position: 'absolute', bottom: 40, right: 0}}>
           <TouchableOpacity
             style={{
               backgroundColor: nextPage,

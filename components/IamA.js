@@ -10,7 +10,8 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 
 const IamA = props => {
@@ -188,7 +189,7 @@ const IamA = props => {
                       props.navigation.navigate('LookingFor', user);
                     } 
                     if (!select) {
-                      alert('Please select one');
+                      Alert.alert('Please select one');
                       return;
                     }}
                 }}>

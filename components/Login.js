@@ -18,9 +18,7 @@ import {User} from '../src/models';
 const Login = ({navigation}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
   const wordslist = ['here', 'there'];
-  useEffect( async () => {
-    console.log('ME:',await Auth.currentAuthenticatedUser())
-  }, [])
+
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,

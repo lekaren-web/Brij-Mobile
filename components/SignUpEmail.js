@@ -113,7 +113,7 @@ class SignUpEmail extends Component {
       
         this.props.navigation.navigate('EmailVerify', {username: this.state.email, password: this.state.password})
       } catch (error) {
-        alert(error);
+        Alert.alert(error.message);
       }
     }
 

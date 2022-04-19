@@ -48,7 +48,7 @@ class EmailVerify extends Component {
       keyboardStatus: false,
       errorMessage: '',
       code: '',
-      nextPage: 'lightgrey'
+      nextPage: 'lightgrey',
     };
   }
 
@@ -67,6 +67,14 @@ class EmailVerify extends Component {
     );
   }
 
+  async resendCode(){
+    try {
+      await Auth.resendSignUp(this.props.route.params.username);
+      Alert.alert('New Verification code sent successfully!')
+    }catch(e){
+      Alert.alert(e.message)
+    }
+  }
   async confirmCode() {
     // sending username over from sign up screen
     try {
@@ -78,9 +86,10 @@ class EmailVerify extends Component {
         this.props.route.params.username,
         this.props.route.params.password,
       );
+      this.setState({isLoading: true});
       this.props.navigation.navigate('Verified');
     } catch (e) {
-      alert('Invalid Verfication Code!');
+      Alert.alert('Opps', e.message);
     }
   }
 
@@ -151,13 +160,21 @@ class EmailVerify extends Component {
               textContentType="oneTimeCode"
               keyboardType="number-pad"
               onFulfill={val => {
-                this.setState({nextPage: '#7F5AF0'})
+                this.setState({nextPage: '#7F5AF0'});
                 this.setState({code: val});
-            }}
-              containerStyle={{marginTop: 30}}
+              }}
+              containerStyle={{marginTop: 30, marginBottom: 0}}
               codeInputStyle={{borderWidth: 1.5}}
-              codeLength= {6}
+              codeLength={6}
             />
+            
+            <TouchableOpacity onPress={() => {
+              this.resendCode();
+            }}>
+              <Text style={{color: '#30467B', bottom: '70%', fontSize: 13}}>
+              Didn’t get a code?
+            </Text>
+            </TouchableOpacity>
 
             {/* <Input
               errorStyle={{ color: "red" }}
@@ -204,9 +221,7 @@ class EmailVerify extends Component {
             /> */}
 
             {/* <KeyboardAvoidingView behavior="" > */}
-            <Text style={{color: '#30467B', top: 20, fontSize: 13}}>
-              Didn’t get a code?
-            </Text>
+            
             <View style={{position: 'absolute', bottom: -10, right: -5}}>
               <TouchableOpacity
                 style={{
@@ -222,7 +237,7 @@ class EmailVerify extends Component {
                 onPress={() => {
                   //   this.storeUser();
                   this.confirmCode();
-                  this.setState({isLoading: true});
+
                   // this.props.navigation.navigate('Verified')
                   // source={require('../assets/profile.png')}
                 }}>

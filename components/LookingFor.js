@@ -13,7 +13,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 import Option from './option';
 import {
@@ -126,14 +127,19 @@ const LookingFor = props => {
             onPress={() => {
             
                 //   uncomment the alert when data is connected
-                // alert('Please select at least 3');
+                if(arr.length < 3){
+                  Alert.alert('Please select at least 3')
+                } else {
+                  
                 props.navigation.navigate('Myname', {
                   enableNotifs: props.route.params.enableNotifs,
                   mentor: props.route.params.mentor,
                   mentee: props.route.params.mentee,
                   both: props.route.params.both,
-                  lookingFor: arr,
+                  lookingFor: arr
+                  
                 })
+              }
               
             }}>
             <Image source={require('../assets/arrow-right.png')}></Image>

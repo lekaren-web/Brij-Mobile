@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 import 'react-native-gesture-handler'
-import React from 'react';
+import React , {useEffect, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -26,25 +26,42 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import StackNav from './components/StackNav';
-import {NavigationContainer} from '@react-navigation/native';
 // const Section = ({children, title}): Node => {
 //   const isDarkMode = useColorScheme() === 'dark';
 //   return (
 
 //   );
 // };
+import {Auth, Hub, DataStore} from 'aws-amplify';
 import Amplify from 'aws-amplify';
 import config from './src/aws-exports';
 import { withAuthenticator, Authenticator, SignIn } from 'aws-amplify-react-native';
-import {Auth} from 'aws-amplify';
 
-Amplify.configure(config);
+Amplify.configure({...config, 
+Analytics: {
+  disabled: true
+}
+});
 const App = () => {
-  
+  const [isUserLoading, setisUserloading] = useState(true)
+
+  useEffect(() => {
+    const listner = Hub.listen('datastore', async hubData => {
+      const {event, data} = hubData.payload;
+      if(event === 'modelSynced' && data?.model?.name === 'User'){
+        console.log(`User model has synced`)
+        setisUserloading(false)
+      };
+
+      DataStore.start()
+      return () => listner()
+
+    })
+   }, [])
   return (
-    <NavigationContainer>
-      <StackNav />
-    </NavigationContainer>
+    <View style={{flexGrow: 1}}>
+      <StackNav props={isUserLoading} />
+    </View>
   );
 }
 

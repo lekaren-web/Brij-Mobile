@@ -25,78 +25,32 @@ import {
   SafeAreaView,
 } from 'react-native';
 import {Input, Icon} from 'react-native-elements';
-import Amplify from 'aws-amplify';
-import {Auth} from 'aws-amplify';
+import { Auth } from 'aws-amplify';
 // import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 // console.log('auth', auth());
 // console.log('getAuth', getAuth);
-class SignIn extends Component {
-  constructor() {
-    super();
-    // this.dbRef = firebase.firestore().collection("users");
-    // this.getEmail, this.setEmail = useState('');
-    // this.hasEmailErrors, setEmailErrors = useState(false);
-    this.state = {
-      imageStyle: {width: 320, height: 320},
-      // name: '',
-      email: '',
-      password: '',
-      re_enter_password: '',
-      // mobile: "",
-      isLoading: false,
-      appVerifier: null,
-      response: '',
-      keyboardStatus: false,
-      errorMessage: '',
-    };
-  }
-
-  componentDidMount() {
-    this.keyboardDidShowSubscription = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        this.setState({keyboardStatus: 'true'});
-      },
-    );
-    this.keyboardDidHideSubscription = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        this.setState({keyboardStatus: 'false'});
-      },
-    );
-  }
+const SignIn = (props) =>  {
+// const imageStyle= {width: 320, height: 320},
+const [email, setEmail]= useState('')
+const [password, setPassword]= useState('')
+const [currentUser, setCurrentUSer]= useState(null)
 
 
-  async signIn() {
+ const signIn = async () => {
     
       try {
-        const {user} = await Auth.signIn({
-          username: this.state.email,
-          password: this.state.password,
-          // attributes: {
-          //     email,          // optional
-          //     phone_number,   // optional - E.164 number convention
-          //     // other custom attributes
-          // }
-        })
-        
-        this.props.navigation.navigate('MyProfile')
+        const user = await Auth.signIn(email, password);
+
+        setCurrentUSer(user)
+        // console.log('I am :', currentUser)
+        // props.navigation.navigate('MyProfile')
       } catch (error) {
-        alert(error);
+        Alert.alert('Opps,', error.message);
       }
 
 
-    // this.props.navigation.navigate("EmailVerify")
   }
 
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.preloader}>
-          <ActivityIndicator size="large" color="#9E9E9E" />
-        </View>
-      );
-    }
 
     return (
       <SafeAreaView>
@@ -111,8 +65,8 @@ class SignIn extends Component {
             returnKeyType="next"
             keyboardType="email-address"
             errorStyle={{color: 'red'}}
-            value={this.state.email}
-            onChangeText={val => this.setState({email: val})}
+            value={email}
+            onChangeText={val => setEmail(val)}
             style={{
               borderStyle: 'solid',
               borderColor: '#30467B99',
@@ -129,8 +83,8 @@ class SignIn extends Component {
             label="Password"
             returnKeyType="next"
             secureTextEntry={true}
-            value={this.state.password}
-            onChangeText={val => this.setState({password: val})}
+            value={password}
+            onChangeText={val => setPassword(val)}
             style={{
               borderStyle: 'solid',
               borderColor: '#30467B99',
@@ -146,7 +100,11 @@ class SignIn extends Component {
           {/* <KeyboardAvoidingView behavior="" > */}
           <TouchableOpacity
             style={styles.button1}
-            onPress={() => this.signIn()}>
+            onPress={() => {
+              signIn()
+              props.navigation.navigate('MyProfile', currentUser)
+
+            }}>
             <Text
               style={{
                 color: 'white',
@@ -164,7 +122,7 @@ class SignIn extends Component {
 
           <Text
             style={{color: '#30467B', fontWeight: 'bold', top: 120}}
-            onPress={() => this.props.navigation.navigate('SignUp')}>
+            onPress={() => props.navigation.navigate('SignUp')}>
             Sign up
           </Text>
           {/* </KeyboardAvoidingView> */}
@@ -174,7 +132,6 @@ class SignIn extends Component {
       // </TouchableWithoutFeedback>
     );
   }
-}
 const styles = StyleSheet.create({
   inputGroup: {
     backgroundColor: '#30467B',

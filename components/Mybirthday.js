@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   Text,
   Modal,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 import ScrollPicker from 'react-native-wheel-scroll-picker';
 import moment from 'moment';
@@ -179,7 +180,7 @@ class Birthday extends Component {
       this.props.navigation.navigate('MyLocation');
       // console.log('next')
     } else {
-      alert('Please include your date of Birth');
+      Alert.alert('Please include your date of Birth');
     }
   }
 
@@ -391,7 +392,7 @@ class Birthday extends Component {
             
                //  this.setModalVisible(true);
               if (this.state.age === 0){
-                alert('Please include your birth date')
+                Alert.alert('Please include your birth date')
               } else {
                 this.setModalVisible(!this.state.modalVisible);
                 this.props.route.params.age = this.state.age

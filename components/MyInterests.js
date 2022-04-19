@@ -13,7 +13,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   TouchableHighlight,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 import Option from './option';
 import {
@@ -126,8 +127,13 @@ const MyInterests = props => {
             color={Colors.white}
             size={40}
             onPress={() => {
+              if (arr.length < 1){
+                Alert.alert('Please select at least one')
+              } else {
               props.route.params.interests = arr;
               props.navigation.navigate('InclusionSurvey', props.route.params);
+              }
+              
             }}>
             <Image source={require('../assets/arrow-right.png')}></Image>
           </TouchableOpacity>

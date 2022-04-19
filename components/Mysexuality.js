@@ -33,7 +33,7 @@ const Mysexuality = props => {
     <SafeAreaView style={styles.container}>
       <View style={{height: '100%'}}>
         {/* first component */}
-        
+
         <View style={styles.component1}>
           <Text style={styles.headerText}>My sexuality is</Text>
         </View>
@@ -43,15 +43,12 @@ const Mysexuality = props => {
           <ScrollView>
             <MultiSelect
               data={sexualities}
-              onSelectedItemsChange={(val) => setArr(val)}
+              onSelectedItemsChange={val => setArr(val)}
               selectedItems={arr}
               title={'Select from the following'}
               icon={'caret-down'}
               iconDisabled={true}
               enableTitle
-
-              
-              
             />
           </ScrollView>
         </View>
@@ -101,7 +98,7 @@ const Mysexuality = props => {
               props.route.params.sexuality = arr;
               props.route.params.sexualityVisible = sexualityVisible;
               // console.log('hi', props.route.params);
-              props.navigation.navigate('MyInterests', props.route.params)
+              props.navigation.navigate('MyInterests', props.route.params);
             }}>
             <Image source={require('../assets/arrow-right.png')}></Image>
           </TouchableOpacity>

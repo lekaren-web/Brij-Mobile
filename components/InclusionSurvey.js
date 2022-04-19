@@ -25,7 +25,8 @@ const InclusionSurvery = props => {
   const [nextPage, setNextPage] = useState('lightgrey');
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{flexGrow: 1}}>
+      <View style={styles.container}>
       <View style={{height: '100%'}}>
         {/* first component */}
         <View style={styles.component1}>
@@ -45,19 +46,18 @@ const InclusionSurvery = props => {
           style={styles.Input}
           onChangeText={val => {
             setInclusionSurvery(val);
-            setNextPage('#7F5AF0')
+            setNextPage('#7F5AF0');
           }}
           placeholder="Use this space to write down your experience."></TextInput>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             props.route.params.inclusionSurvery = inclusionSurvery;
             // props.navigation.navigate('AddPhotos', props.route.params);
-            console.log(props.route.params);
           }}>
           <Text style={{marginTop: 60, color: '#8390B0', fontWeight: '400'}}>
             Skip survey
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View style={{position: 'absolute', bottom: 0, right: 0}}>
           <TouchableOpacity
             style={{
@@ -77,6 +77,7 @@ const InclusionSurvery = props => {
             <Image source={require('../assets/arrow-right.png')}></Image>
           </TouchableOpacity>
         </View>
+      </View>
       </View>
     </SafeAreaView>
   );
@@ -109,10 +110,9 @@ const styles = StyleSheet.create({
   subText: {
     color: '#8390B0',
     fontWeight: '500',
-    fontSize: 11,
+    fontSize: 14,
     textAlign: 'left',
-    alignSelf: 'center',
-    margin: 8,
+    margin: 5,
     marginTop: 20,
   },
   options: {
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignSelf: 'center',
     alignItems: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
   },
 });
 export default InclusionSurvery;
