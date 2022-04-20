@@ -32,35 +32,23 @@ import Audiospace from './Audiospace'
 
 const Stack = createNativeStackNavigator();
 
-const StackNav = props => {
+const StackNav = ({isUserLoading}) => {
   // state ={
   const [currentUser, setCurrentUser] = useState(null);
   const checkUser = async () => {
-    const authUser = await Auth.currentAuthenticatedUser({bypassCache: true});
-    setCurrentUser(authUser);
+    // const authUser = await Auth.currentAuthenticatedUser({bypassCache: true});
+    // setCurrentUser(authUser);
   };
   useEffect(() => {
     checkUser();
+    console.log('in stack nav', isUserLoading)
   }, []);
-
-  // useEffect(() => {
-  //  const listner = Hub.listen('datastore', async hubData => {
-  //    const {event, data} = hubData.payload;
-  //    if(event === 'modelSynced' && data?.model?.name === 'User'){
-  //      console.log(`User model has synced`)
-  //      setisUserloading(false)
-  //    };
-
-     
-  //    return () => listner()
-  //  })
-  // }, [])
 
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        {!currentUser ? (
-          <>
+        {/* {!currentUser ? (
+          <> */}
             <Stack.Screen
               name="Home"
               component={LoginScreen}
@@ -161,57 +149,79 @@ const StackNav = props => {
               component={InclusivityAgreement}
               options={{title: 'InclusivityAgreement'}}
             />
-            <Stack.Screen
-              name="MyProfile"
-              options={{title: 'MyProfile'}}
-            >{(props) => <MyProfile {...props}  />}</Stack.Screen>
-
-            <Stack.Screen
-              name="Explore"
-              component={Explore}
-              options={{title: 'Explore'}}
-            />
-            <Stack.Screen
-              name="Message"
-              component={Message}
-              options={{title: 'Message'}}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen
+           {/* <Stack.Screen
               name="MyProfile"
               component={MyProfile}
               options={{title: 'MyProfile'}}
-            />
+           />
 
             <Stack.Screen
               name="Explore"
               component={Explore}
               options={{title: 'Explore'}}
-            />
-            <Stack.Screen
+            /> */}
+            {/* <Stack.Screen
               name="Message"
               component={Message}
               options={{title: 'Message'}}
             />
             <Stack.Screen
               name="Calendar"
-              component={Calendar}
               options={{title: 'Calendar'}}
-            />
+            >
+            {(props) => <Calendar {...props} isUserLoading={isUserLoading} />}</Stack.Screen>
             <Stack.Screen
               name="Forum"
-              component={Forum}
               options={{title: 'Forum'}}
-            />
+            >
+            {(props) => <Forum {...props} isUserLoading={isUserLoading} />}</Stack.Screen>
             <Stack.Screen
               name="Audiospace"
-              component={Audiospace}
               options={{title: 'Audiospace'}}
-            />
-          </>
-        )}
+            >{(props) => <Audiospace {...props} isUserLoading={isUserLoading} />}</Stack.Screen> */}
+          {/* </> */}
+            <Stack.Screen
+              name="MyProfile"
+              options={{title: 'MyProfile'}}
+            >
+            {(props) => <MyProfile {...props} isUserLoading={isUserLoading} />}
+            </Stack.Screen>
+            {/* <Stack.Screen
+              name="SignIn"
+              component={SignIn}
+              options={{title: 'SignIn'}}
+            /> */}
+            <Stack.Screen
+              name="Explore"
+              options={{title: 'Explore'}}
+
+            >
+            {(props) => <Explore {...props} isUserLoading={isUserLoading} />}</Stack.Screen>
+            <Stack.Screen
+              name="Message"
+              options={{title: 'Message'}}
+            >
+            {(props) => <Message {...props} isUserLoading={isUserLoading} />}</Stack.Screen>
+            <Stack.Screen
+              name="Calendar"
+              options={{title: 'Calendar'}}
+            >
+            {(props) => <Calendar {...props} isUserLoading={isUserLoading} />}</Stack.Screen>
+            <Stack.Screen
+              name="Forum"
+              options={{title: 'Forum'}}
+            >
+            {(props) => <Forum {...props} isUserLoading={isUserLoading} />}</Stack.Screen>
+            <Stack.Screen
+              name="Audiospace"
+              options={{title: 'Audiospace'}}
+            >{(props) => <Audiospace {...props} isUserLoading={isUserLoading} />}</Stack.Screen>
+           {/* <Stack.Screen
+              name="Home"
+              component={LoginScreen}
+              options={{title: 'Login'}}
+            /> */}
+          
       </Stack.Navigator>
     </NavigationContainer>
   );

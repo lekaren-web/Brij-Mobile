@@ -30,7 +30,7 @@ export declare class Match {
   readonly User1?: User | null;
   readonly User2?: User | null;
   readonly User1Id: string;
-  readonly User1ID?: string | null;
+  readonly User2Id?: string | null;
   readonly isMatch: boolean;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;

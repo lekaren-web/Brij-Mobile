@@ -15,7 +15,9 @@ import {
 } from 'react-native';
 import {Auth, DataStore} from 'aws-amplify';
 import {User} from '../src/models';
-const Login = ({navigation}) => {
+import {useNavigation} from '@react-navigation/native'
+const Login = () => {
+  const navigation = useNavigation()
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
   const wordslist = ['here', 'there'];
 

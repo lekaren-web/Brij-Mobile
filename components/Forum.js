@@ -16,7 +16,9 @@ import {
 } from 'react-native';
 import {Auth, DataStore} from 'aws-amplify';
 import {Users, Match, Messages} from '../src/models';
+import {useNavigation} from '@react-navigation/native'
 const Message = props => {
+  const navigation= useNavigation()
   // constructor() {
   //   super();
   //   this.state = {
@@ -81,7 +83,6 @@ const Message = props => {
               borderRadius: 50,
             }}>
             <Text
-              onPress={() => {}}
               style={{
                 fontSize: 14,
                 margin: 8,
@@ -364,114 +365,201 @@ const Message = props => {
               <View style={{display: 'flex', flexDirection: 'column'}}>
                 {/* single post */}
                 
-                { [1,3,4,5,6,7].map((e) => (<View
-                  style={{
-                    padding: 10,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderWidth: 0.2,
-                    height: 160,
-                    borderRadius: 10,
-                    marginBottom: 20
-                  }}>
-                  {/*  first section */}
-                  <View
-                    style={{display: 'flex', flexDirection: 'row', height: 50}}>
+                {[{
+                    name: 'Karen Le • 6h',
+                    profile: 'https://thumbs.dreamstime.com/b/great-news-smiling-black-woman-showing-thumbs-up-isolated-yellow-background-free-space-happy-african-girl-showing-thumbs-up-166406814.jpg',
+                    message: 'Have you guys found any cool connections yet?'
+                  },{
+                    name: 'Gina Lee • 7h',
+                    profile: 'https://media.istockphoto.com/photos/young-mixed-race-businesswoman-smiling-to-camera-picture-id1011792066?k=20&m=1011792066&s=612x612&w=0&h=QYMisoii-5qu2aUwwSH8GxeqtHeaP9lwVxsn3eR-t5o=',
+                    message:'Joni Mitchell Says She’s Removing Her Music From Spotify in Solidarity With Neil Young.'
+                  },
+                  {
+                    name: 'Allan Cox • 7h',
+                    profile: 'https://media.istockphoto.com/photos/portrait-young-confident-smart-asian-businessman-look-at-camera-and-picture-id1288538088?b=1&k=20&m=1288538088&s=170667a&w=0&h=3efMku7kSXUhpVrErAVVgxp6G91tRZ_5seygOn68RnE=',
+                    message:'I have some cool new opportunities if anyones interested'
+                  },
+                  {
+                    name: 'Vanessa M • 7h',
+                    profile: 'https://media.istockphoto.com/photos/headshot-of-black-woman-in-glasses-posing-isolated-in-studio-picture-id1201144505?k=20&m=1201144505&s=612x612&w=0&h=55VZDUbyEHxKOlyyhkXw2VR2SwdCACzVCm6FqRt3Qpw=',
+                    message:'Joni Mitchell Says She’s Removing Her Music From Spotify in Solidarity With Neil Young.'
+                  }
+                ].map(e => (
                     <View
                       style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 50,
-                        overflow: 'hidden',
-                        marginRight: 10,
-                        alignSelf: 'center',
+                        padding: 10,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        borderWidth: 0.2,
+                        height: 160,
+                        borderRadius: 10,
+                        marginBottom: 20,
+                        borderColor: 'grey',
                       }}>
-                      <ImageBackground
-                        style={{width: '100%', height: '100%'}}
-                        source={require('../assets/profile.png')}
-                      />
-                    </View>
+                      {/*  first section */}
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          height: 50,
+                        }}>
+                        <View
+                          style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 50,
+                            overflow: 'hidden',
+                            marginRight: 10,
+                            alignSelf: 'center',
+                          }}>
+                          <ImageBackground
+                            style={{width: '100%', height: '100%'}}
+                            source={{url : e.profile}}
+                          />
+                        </View>
 
-                    {/*  name and time */}
-                    <Text
-                      style={{
-                        alignSelf: 'center',
-                        marginRight: 20,
-                        color: '#30467B99',
-                      }}>
-                      Gina Lee • 6h
-                    </Text>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: '#E4DFFA',
-                        width: 100,
-                        height: 30,
-                        alignSelf: 'center',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        borderRadius: 50,
-                      }}>
+                        {/*  name and time */}
+                        <Text
+                          style={{
+                            alignSelf: 'center',
+                            marginRight: 10,
+                            color: '#30467B99',
+                          }}>
+                          {e.name}
+                        </Text>
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: '#E4DFFA',
+                            width: 100,
+                            height: 30,
+                            alignSelf: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: 50,
+                          }}>
+                          <Text
+                            style={{
+                              color: '#30467B99',
+                              fontWeight: '500',
+                              fontSize: 14,
+                              textAlign: 'center',
+                              alignSelf: 'center',
+                            }}>
+                            Music News
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                       <Text
                         style={{
-                          color: '#30467B99',
-                          fontWeight: '500',
-                          fontSize: 12,
-                          textAlign: 'center',
+                          color: '#30467B',
+                          fontWeight: '400',
+                          fontSize: 16,
                           alignSelf: 'center',
+                          marginTop: 5,
+                          marginBottom: 10,
                         }}>
-                        Music News
+                        {e.message}
                       </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <Text
-                    style={{color: '#30467B', fontWeight: '400', fontSize: 16, alignSelf:'center', marginTop: 5, marginBottom:10}}>
-                    Joni Mitchell Says She’s Removing Her Music From Spotify in
-                    Solidarity With Neil Young.
-                  </Text>
-                  {/* icons */}
-                  <View style={{display: 'flex', flexDirection: 'row', justifyContent:'space-evenly'}}>
-                      <View style={{display:'flex', flexDirection:'row'}}>
-                      <TouchableOpacity style={{width: 20, height: 20, alignSelf:'center', marginTop: 10}}>
-                      <ImageBackground
-                        style={{width: '100%', height: '100%'}}
-                        source={require('../assets/likePost.png')}
-                      />
-                      </TouchableOpacity>
-                      <Text style={{alignSelf:'center', marginTop: 10, marginLeft: 10}}>Like</Text>
-                      </View>
+                      {/* icons */}
+                      <View
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          justifyContent: 'space-evenly',
+                        }}>
+                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                          <TouchableOpacity
+                            style={{
+                              width: 20,
+                              height: 20,
+                              alignSelf: 'center',
+                              marginTop: 10,
+                            }}>
+                            <ImageBackground
+                              style={{width: '100%', height: '100%'}}
+                              source={require('../assets/likePost.png')}
+                            />
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              alignSelf: 'center',
+                              marginTop: 10,
+                              marginLeft: 10,
+                            }}>
+                            Like
+                          </Text>
+                        </View>
 
-                      <View style={{display:'flex', flexDirection:'row'}}>
-                      <TouchableOpacity style={{width: 20, height: 20, alignSelf:'center', marginTop: 10}}>
-                      <ImageBackground
-                        style={{width: '100%', height: '100%'}}
-                        source={require('../assets/comment.png')}
-                      />
-                      </TouchableOpacity>
-                      <Text style={{alignSelf:'center', marginTop: 10, marginLeft: 10}}>20k</Text>
+                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                          <TouchableOpacity
+                            style={{
+                              width: 20,
+                              height: 20,
+                              alignSelf: 'center',
+                              marginTop: 10,
+                            }}>
+                            <ImageBackground
+                              style={{width: '100%', height: '100%'}}
+                              source={require('../assets/comment.png')}
+                            />
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              alignSelf: 'center',
+                              marginTop: 10,
+                              marginLeft: 10,
+                            }}>
+                            20k
+                          </Text>
+                        </View>
+                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                          <TouchableOpacity
+                            style={{
+                              width: 15,
+                              height: 19,
+                              alignSelf: 'center',
+                              marginTop: 10,
+                            }}>
+                            <ImageBackground
+                              style={{width: '100%', height: '100%'}}
+                              source={require('../assets/bookmark.png')}
+                            />
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              alignSelf: 'center',
+                              marginTop: 10,
+                              marginLeft: 10,
+                            }}>
+                            Save
+                          </Text>
+                        </View>
+                        <View style={{display: 'flex', flexDirection: 'row'}}>
+                          <TouchableOpacity
+                            style={{
+                              width: 20,
+                              height: 20,
+                              alignSelf: 'center',
+                              marginTop: 10,
+                            }}>
+                            <ImageBackground
+                              style={{width: '100%', height: '100%'}}
+                              source={require('../assets/share.png')}
+                            />
+                          </TouchableOpacity>
+                          <Text
+                            style={{
+                              alignSelf: 'center',
+                              marginTop: 10,
+                              marginLeft: 10,
+                            }}>
+                            Share
+                          </Text>
+                        </View>
                       </View>
-                      <View style={{display:'flex', flexDirection:'row'}}>
-                      <TouchableOpacity style={{width: 15, height: 19, alignSelf:'center', marginTop: 10}}>
-                      <ImageBackground
-                        style={{width: '100%', height: '100%'}}
-                        source={require('../assets/bookmark.png')}
-                      />
-                      </TouchableOpacity>
-                      <Text style={{alignSelf:'center', marginTop: 10, marginLeft: 10}}>Save</Text>
-                      </View>
-                      <View style={{display:'flex', flexDirection:'row'}}>
-                      <TouchableOpacity style={{width: 20, height: 20, alignSelf:'center', marginTop: 10}}>
-                      <ImageBackground
-                        style={{width: '100%', height: '100%'}}
-                        source={require('../assets/share.png')}
-                      />
-                      </TouchableOpacity>
-                      <Text style={{alignSelf:'center', marginTop: 10, marginLeft: 10}}>Share</Text>
-                      </View>
-                  </View>
+                    </View>
+                  ))}
                 </View>
-                ))
-            }
-              </View>
             )}
           </ScrollView>
         </View>
@@ -484,7 +572,7 @@ const Message = props => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('Audiospace')}
+          onPress={() => navigation.navigate('Audiospace')}
           style={styles.talkspacelogo}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -492,7 +580,7 @@ const Message = props => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('Explore')}
+          onPress={() => navigation.navigate('Explore')}
           style={[styles.explorelogo]}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -501,7 +589,7 @@ const Message = props => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('Calendar')}
+          onPress={() => navigation.navigate('Calendar')}
           style={styles.calendarlogo}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -510,7 +598,7 @@ const Message = props => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => props.navigation.navigate('Message')}
+          onPress={() => navigation.navigate('Message')}
           style={styles.messagelogo}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -627,24 +715,24 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   forumlogo: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
   talkspacelogo: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
   explorelogo: {
-    width: 50,
-    height: 30,
+    width: 45,
+    height: 25,
   },
   calendarlogo: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
   messagelogo: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
 });
 export default Message;

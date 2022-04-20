@@ -15,6 +15,7 @@ import {
   Image,
   Icon,
   ImageBackground,
+  RefreshControl
 } from 'react-native';
 import {
   SelectMultipleButton,
@@ -27,12 +28,17 @@ import Tags from 'react-native-tags';
 import SoundCloudLogo from '../assets/soundcloud.png';
 import Spotify from '../assets/spotify.png';
 import insta from '../assets/insta.png';
-import {Auth, DataStore} from 'aws-amplify';
 import {User} from '../src/models';
 import InstagramLogin from 'react-native-instagram-login';
+import {Auth, Hub, DataStore} from 'aws-amplify';
+import {useNavigation} from '@react-navigation/native'
 // import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 // import Chevron from 'react-chevron'
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 const MyProfile = props => {
+  const navigation = useNavigation()
   const [token, setToken] = useState('');
   const [bio, setBio] = useState('');
   const [photos, setphotos] = useState('');
@@ -52,24 +58,19 @@ const MyProfile = props => {
   const [TestimonialEmail, setTestimonialEmail] = useState('');
   const basicInterests = ['Writing music', 'Producing beats', 'Singing'];
   const [testimonialmodalVisible, settestimonialmodalVisible] = useState(false);
-  const setIgToken = data => {
-    console.log('data', data);
-    setToken(data.access_token);
-  };
-  const onClear = () => {
-    CookieManager.clearAll(true).then(res => {
-      this.setState({token: null});
-    });
-  };
   const [dbUser, setdbUser] = useState({});
-  const clear = async() => {
-    await DataStore.clear
-  }
+  const [isUserLoading, setisUserloading] = useState(true);
+
   useEffect(() => {
-    console.log(props)
+// console.log('profile', props)
+  }, [props]);
+ 
+  useEffect(() => {
     const getCurrUser = async () => {
-      const currentUser = await Auth.currentAuthenticatedUser();
-      console.log('CURRENT', currentUser);
+      // {bypassCache: true}
+      // const currentUser = await Auth.currentAuthenticatedUser();
+      // console.log('CURRENT USER', currentUser)
+      // setMe(currentUser)
       const dbUsers = await DataStore.query(User, u =>
         u.sub('eq', currentUser.attributes.sub),
       );
@@ -77,6 +78,7 @@ const MyProfile = props => {
       if (!dbUsers || dbUsers.length === 0) {
         return;
       }
+
 
       const dbUser = dbUsers[0];
       setdbUser(dbUser);
@@ -97,8 +99,6 @@ const MyProfile = props => {
     };
     getCurrUser();
   }, []);
-
-
 
   const save = async () => {
     const updatedUser = User.copyOf(user, updated => {
@@ -172,10 +172,10 @@ const MyProfile = props => {
           })
         : 'Add',
     },
-    {name: 'Years of experience', item: yearsOfExperience},
-    {name: 'Vaccination status', item: VaccinationStatus},
-    {name: 'Gender', item: gender},
-    {name: 'Location', item: location},
+    {name: 'Years of experience', item: '5 +'},
+    {name: 'Vaccination status', item: 'Fully Vaccinated'},
+    {name: 'Gender', item: 'Woman'},
+    {name: 'Location', item: 'NY - New York'},
   ];
 
   const accountsList = [
@@ -186,200 +186,181 @@ const MyProfile = props => {
 
   const signout = async () => {
     await Auth.signOut();
-    await DataStore.clear
-    props.navigation.navigate('Home');
+    DataStore.clear();
+    navigation.navigate('Home');
   };
+  const [refreshing, setRefreshing] = React.useState(false);
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
   // if (hasAccount) {
   return (
-    <SafeAreaView style={{backgroundColor: 'white'}}>
-      {
-        props?.isUserLoading ? 
-        (<ActivityIndicator styles={{flexGrow: 1, height:'100%'}}/>)
-        : (
-      <ScrollView>
-        <View style={styles.container}>
-          {/* My Photos component */}
-          <View>
-            <Text style={styles.TopicTitle}>My Photos </Text>
-            <View style={styles.outerPhoto}>
-              <View style={styles.topPhotoRow}>
-                <View style={styles.leftPhoto}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleChoosePhoto();
-                    }}>
-                    {user ? (
-                      user.profilePic ? (
-                        <ImageBackground
-                          style={styles.bigPhoto}
-                          source={{url: user.profilePic}}
-                          resizeMode="cover"></ImageBackground>
-                      ) : (
-                        <ImageBackground
-                          style={styles.bigPhoto}
-                          source={image}
-                          resizeMode="cover"></ImageBackground>
-                      )
-                    ) : (
-                      <View></View>
-                    )}
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.rightPhotos}>
-                  {user ? (
-                    user.pictures ? (
-                      user.pictures.map(e => (
+    <SafeAreaView style={{backgroundColor: 'white', height:'100%'}}>
+      <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }>
+        
+        {/* {!me ? ( 
+          <ActivityIndicator styles={{flexGrow: 1, alignSelf:'center'}} /> 
+         ) : (  */}
+          <View style={styles.container}>
+            {/* My Photos component */}
+            <View>
+              <Text style={styles.TopicTitle}>My Photos </Text>
+              <View style={styles.outerPhoto}>
+                <View style={styles.topPhotoRow}>
+                  <View style={styles.leftPhoto}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        // handleChoosePhoto();
+                      }}>
+                      {/* {user ? (
+                        user.profilePic ? ( */}
+                          <ImageBackground
+                            style={styles.bigPhoto}
+                            source={require('../assets/Naomi.jpg')}
+                            resizeMode="cover"></ImageBackground>
+                        {/* ) : ( */}
+                          {/* <ImageBackground
+                            style={styles.bigPhoto}
+                            source={image}
+                            resizeMode="cover"></ImageBackground> */}
+                        {/* ) */}
+                      {/* ) : ( */}
+                        {/* <View></View> */}
+                      {/* )} */}
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.rightPhotos}>
+                    {/* {user ? (
+                      user.pictures ? (
+                        user.pictures.map(e => (
+                          <>
+                            <TouchableOpacity
+                              onPress={() => {
+                                // handleChoosePhoto();
+                              }}
+                              style={styles.rightImage}>
+                              <ImageBackground
+                                style={{width: '100%', height: '100%'}}
+                                source={{url: e.uri}}
+                                resizeMode="cover"></ImageBackground>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => {
+                                // handleChoosePhoto();
+                              }}
+                              style={styles.rightImage}>
+                              <ImageBackground
+                                style={{width: '100%', height: '100%'}}
+                                source={{url: e.uri}}
+                                resizeMode="cover"></ImageBackground>
+                              <Text>{e.uri}</Text>
+                            </TouchableOpacity>
+                          </>
+                        ))
+                      ) : ( */}
                         <>
                           <TouchableOpacity
                             onPress={() => {
-                              handleChoosePhoto();
+                              // handleChoosePhoto();
                             }}
                             style={styles.rightImage}>
-                            <ImageBackground
-                              style={{width: '100%', height: '100%'}}
-                              source={{url: e.uri}}
-                              resizeMode="cover"></ImageBackground>
+                            <Text style={styles.photoInput}>+</Text>
                           </TouchableOpacity>
                           <TouchableOpacity
                             onPress={() => {
-                              handleChoosePhoto();
+                              // handleChoosePhoto();
                             }}
                             style={styles.rightImage}>
-                            <ImageBackground
-                              style={{width: '100%', height: '100%'}}
-                              source={{url: e.uri}}
-                              resizeMode="cover"></ImageBackground>
-                            <Text>{e.uri}</Text>
+                            <Text style={styles.photoInput}>+</Text>
                           </TouchableOpacity>
                         </>
-                      ))
+                      {/* )
                     ) : (
-                      <>
-                        <TouchableOpacity
-                          onPress={() => {
-                            handleChoosePhoto();
-                          }}
-                          style={styles.rightImage}>
-                          <Text style={styles.photoInput}>+</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={() => {
-                            handleChoosePhoto();
-                          }}
-                          style={styles.rightImage}>
-                          <Text style={styles.photoInput}>+</Text>
-                        </TouchableOpacity>
-                      </>
-                    )
-                  ) : (
-                    <View></View>
-                  )}
+                      <View></View>
+                    )} */}
+                  </View>
+
+                  {/* third component */}
                 </View>
+                <View style={styles.thirdPhotoComponent}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // handleChoosePhoto();
+                    }}
+                    style={styles.innerThirdPhoto}>
+                    <Text style={styles.photoInput}>+</Text>
+                  </TouchableOpacity>
 
-                {/* third component */}
-              </View>
-              <View style={styles.thirdPhotoComponent}>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleChoosePhoto();
-                  }}
-                  style={styles.innerThirdPhoto}>
-                  <Text style={styles.photoInput}>+</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // handleChoosePhoto();
+                    }}
+                    style={styles.innerThirdPhoto}>
+                    <Text style={styles.photoInput}>+</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => {
-                    handleChoosePhoto();
-                  }}
-                  style={styles.innerThirdPhoto}>
-                  <Text style={styles.photoInput}>+</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    handleChoosePhoto();
-                  }}
-                  style={styles.innerThirdPhoto}>
-                  <Text style={styles.photoInput}>+</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // handleChoosePhoto();
+                    }}
+                    style={styles.innerThirdPhoto}>
+                    <Text style={styles.photoInput}>+</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-          {/* <View style={{ position: "absolute", bottom: 0, right: 0 }}>
+            {/* <View style={{ position: "absolute", bottom: 0, right: 0 }}>
               <IconButton
                 style={{ backgroundColor: "#7F5AF0", width: 80, height: 45 }}
                 icon="arrow-right"
                 color={Colors.white}
                 size={40}
                 onPress={() => {
-                  this.props.navigation.navigate("Explore");
+                  this.navigation.navigate("Explore");
                 }}
               />
             </View> */}
+            {/* About me component */}
+            <View style={styles.aboutMe}>
+              <Text style={styles.TopicTitle}>About Me</Text>
+              <Text style={styles.topicDescription}>
+                Tell others what you do.
+              </Text>
+              <TextInput
+                multiline
+                placeholderTextColor="#30467B99"
+                style={styles.aboutMeInput}
+                onChangeText={val => setBio(val)}
+                placeholder={
+                  bio
+                    ? bio
+                    : 'Use this space to give a quick rundown of who you are and what you do.'
+                }></TextInput>
+            </View>
 
-          {/* About me component */}
-          <View style={styles.aboutMe}>
-            <Text style={styles.TopicTitle}>About Me</Text>
-            <Text style={styles.topicDescription}>
-              Tell others what you do.
-            </Text>
-            <TextInput
-              multiline
-              placeholderTextColor="#30467B99"
-              style={styles.aboutMeInput}
-              onChangeText={val => setBio(val)}
-              placeholder={
-                bio
-                  ? bio
-                  : 'Use this space to give a quick rundown of who you are and what you do.'
-              }></TextInput>
-          </View>
+            {/* my interests component */}
 
-          {/* my interests component */}
+            <View style={styles.myInterests}>
+              <Text style={styles.TopicTitle}>My Interests</Text>
+              <Text style={styles.topicDescription}>
+                Share some fun things you enjoy.
+              </Text>
+              {/* input for interest tags */}
 
-          <View style={styles.myInterests}>
-            <Text style={styles.TopicTitle}>My Interests</Text>
-            <Text style={styles.topicDescription}>
-              Share some fun things you enjoy.
-            </Text>
-            {/* input for interest tags */}
-
-            <ScrollView horizontal={true} style={styles.tagInserts}>
-              {interests.length ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(!modalVisible);
-                  }}
-                  style={{
-                    width: '100%',
-                    alignSelf: 'center',
-                    justifyContent: 'space-evenly',
-                    display: 'flex',
-                    flexDirection: 'row',
-                  }}>
-                  {interests.map(e => (
-                    <Text
-                      style={{
-                        padding: 6,
-                        margin: 10,
-                        borderWidth: 0,
-                        borderRadius: 14,
-                        width: 140,
-                        textAlign: 'center',
-                        height: 30,
-                        backgroundColor: '#E4DFFA',
-                        overflow: 'hidden',
-                        color: '#30467B99',
-                      }}>
-                      {e}
-                    </Text>
-                  ))}
-                </TouchableOpacity>
-              ) : (
-                <View>
+              <ScrollView horizontal={true} style={styles.tagInserts}>
+                {/* {interests.length ? (
                   <TouchableOpacity
-                    onPress={() => setModalVisible(!modalVisible)}
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                    }}
                     style={{
                       width: '100%',
                       alignSelf: 'center',
@@ -387,7 +368,7 @@ const MyProfile = props => {
                       display: 'flex',
                       flexDirection: 'row',
                     }}>
-                    {basicInterests.map(e => (
+                    {interests.map(e => (
                       <Text
                         style={{
                           padding: 6,
@@ -405,254 +386,285 @@ const MyProfile = props => {
                       </Text>
                     ))}
                   </TouchableOpacity>
-                </View>
-              )}
-            </ScrollView>
-          </View>
+                ) : ( */}
+                  <View>
+                    <TouchableOpacity
+                      onPress={() => setModalVisible(!modalVisible)}
+                      style={{
+                        width: '100%',
+                        alignSelf: 'center',
+                        justifyContent: 'space-evenly',
+                        display: 'flex',
+                        flexDirection: 'row',
+                      }}>
+                      {basicInterests.map(e => (
+                        <Text
+                          style={{
+                            padding: 6,
+                            margin: 10,
+                            borderWidth: 0,
+                            borderRadius: 14,
+                            width: 140,
+                            textAlign: 'center',
+                            height: 30,
+                            backgroundColor: '#E4DFFA',
+                            overflow: 'hidden',
+                            color: '#30467B99',
+                          }}>
+                          {e}
+                        </Text>
+                      ))}
+                    </TouchableOpacity>
+                  </View>
+                {/* )} */}
+              </ScrollView>
+            </View>
 
-          {/*  Testimonials component */}
+            {/*  Testimonials component */}
 
-          <View style={styles.Testimonals}>
-            <Text style={styles.TopicTitle}>Testimonals</Text>
-            <Text style={styles.topicDescription}>
-              phone a friend (or collegue).
-            </Text>
-            <TouchableOpacity>
-              <TextInput
-                onChangeText={val => {
-                  setTestimonialEmail(val);
-                }}
-                style={{
-                  height: 40,
-                  borderWidth: 2,
-                  borderColor: '#D9CEFB',
-                  padding: 10,
-                  borderRadius: 10,
-                  width: '85%',
-                  justifyContent: 'center',
-                }}
-                placeholder="example@email.com"></TextInput>
-              <TouchableOpacity
-                onPress={() => settestimonialmodalVisible(true)}>
-                <Text
+            <View style={styles.Testimonals}>
+              <Text style={styles.TopicTitle}>Testimonals</Text>
+              <Text style={styles.topicDescription}>
+                phone a friend (or collegue).
+              </Text>
+              <TouchableOpacity>
+                <TextInput
+                  onChangeText={val => {
+                    setTestimonialEmail(val);
+                  }}
                   style={{
-                    position: 'relative',
-                    left: '90%',
-                    bottom: 45,
-                    fontSize: 30,
-                    color: '#A58CF5',
-                    fontWeight: '300',
-                  }}>
-                  +
-                </Text>
-              </TouchableOpacity>
-            </TouchableOpacity>
-          </View>
-
-          {/* My Basics */}
-
-          <View style={styles.basics}>
-            <Text style={[styles.TopicTitle, {marginBottom: 10}]}>
-              My basics
-            </Text>
-            {basicslist.map(e => (
-              <View key={e.name} style={styles.basicsEach}>
-                <Text style={styles.basicText}>{e.name}</Text>
-                <TouchableOpacity styles={styles.basicButtons}>
-                  <Text style={styles.basicAdd}>
-                    {e.item ? e.item : 'Add'}
-                    <Text style={{fontSize: 20, fontWeight: '100'}}>
-                      {' >'}
-                    </Text>
+                    height: 40,
+                    borderWidth: 2,
+                    borderColor: '#D9CEFB',
+                    padding: 10,
+                    borderRadius: 10,
+                    width: '85%',
+                    justifyContent: 'center',
+                  }}
+                  placeholder="example@email.com"></TextInput>
+                <TouchableOpacity
+                  onPress={() => settestimonialmodalVisible(true)}>
+                  <Text
+                    style={{
+                      position: 'relative',
+                      left: '90%',
+                      bottom: 45,
+                      fontSize: 30,
+                      color: '#A58CF5',
+                      fontWeight: '300',
+                    }}>
+                    +
                   </Text>
                 </TouchableOpacity>
-              </View>
-            ))}
-          </View>
+              </TouchableOpacity>
+            </View>
 
-          {/* my pronouns */}
-          <View style={styles.pronounContainer}>
-            <Text style={styles.TopicTitle}>My pronouns</Text>
-            <Text style={styles.topicDescription}>
-              Let us know how to address you.
-            </Text>
-            <TextInput
-              multiline
-              placeholderTextColor="#30467B99"
-              style={styles.pronounInput}
-              onChangeText={val => setBio(val)}
-              placeholder={pronoun ? pronoun : 'example: she/her'}></TextInput>
-          </View>
+            {/* My Basics */}
 
-          {/* Created Account */}
-          <View style={styles.createdAccount}>
-            <Text style={styles.TopicTitle}>Connected Accounts</Text>
-            <Text style={styles.topicDescription}>Show off your skills.</Text>
+            <View style={styles.basics}>
+              <Text style={[styles.TopicTitle, {marginBottom: 10}]}>
+                My basics
+              </Text>
+              {basicslist.map(e => (
+                <View key={e.name} style={styles.basicsEach}>
+                  <Text style={styles.basicText}>{e.name}</Text>
+                  <TouchableOpacity styles={styles.basicButtons}>
+                    <Text style={styles.basicAdd}>
+                      {e.item ? e.item : 'Add'}
+                      <Text style={{fontSize: 20, fontWeight: '100'}}>
+                        {' >'}
+                      </Text>
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
 
-            {/*  Component for accounts  */}
-            <View style={{display: 'flex', flexDirection: 'column'}}>
-              {/*  each account */}
+            {/* my pronouns */}
+            <View style={styles.pronounContainer}>
+              <Text style={styles.TopicTitle}>My pronouns</Text>
+              <Text style={styles.topicDescription}>
+                Let us know how to address you.
+              </Text>
+              <TextInput
+                multiline
+                placeholderTextColor="#30467B99"
+                style={styles.pronounInput}
+                onChangeText={val => setBio(val)}
+                placeholder={
+                  pronoun ? pronoun : 'example: she/her'
+                }></TextInput>
+            </View>
 
-              {/* {accountsList.map(e => (
+            {/* Created Account */}
+            <View style={styles.createdAccount}>
+              <Text style={styles.TopicTitle}>Connected Accounts</Text>
+              <Text style={styles.topicDescription}>Show off your skills.</Text>
+
+              {/*  Component for accounts  */}
+              <View style={{display: 'flex', flexDirection: 'column'}}>
+                {/*  each account */}
+
+                {/* {accountsList.map(e => (
                 
               ))} */}
 
-              <TouchableOpacity>
-                <View style={styles.eachAccount}>
-                  {/* first component */}
-                  <View
-                    style={{
-                      width: 50,
-                      height: 50,
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}>
-                    {/* logo */}
-                    <ImageBackground
-                      style={{width: '100%', height: '100%'}}
-                      source={SoundCloudLogo}></ImageBackground>
+                <TouchableOpacity>
+                  <View style={styles.eachAccount}>
+                    {/* first component */}
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}>
+                      {/* logo */}
+                      <ImageBackground
+                        style={{width: '100%', height: '100%'}}
+                        source={SoundCloudLogo}></ImageBackground>
+                    </View>
+                    {/* second component */}
+                    <View style={{marginLeft: 10, marginRight: 10}}>
+                      <Text style={styles.accountTopic}>
+                        Connect your Spotify
+                      </Text>
+                      <Text style={{color: '#30467B99', width: 230}}>
+                        Choose your top five. Your profile will be visible to
+                        other users.
+                      </Text>
+                    </View>
+                    {/* third component */}
+                    <View style={styles.circle}></View>
+                    <View style={styles.accoutSelect}>
+                      {/* top5 from accounts */}
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  {/* second component */}
-                  <View style={{marginLeft: 10, marginRight: 10}}>
-                    <Text style={styles.accountTopic}>
-                      Connect your Spotify
-                    </Text>
-                    <Text style={{color: '#30467B99', width: 230}}>
-                      Choose your top five. Your profile will be visible to
-                      other users.
-                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <View style={styles.eachAccount}>
+                    {/* first component */}
+                    <View
+                      style={{
+                        width: 50,
+                        height: 50,
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}>
+                      {/* logo */}
+                      <ImageBackground
+                        style={{width: '100%', height: '100%'}}
+                        source={Spotify}></ImageBackground>
+                    </View>
+                    {/* second component */}
+                    <View style={{marginLeft: 10, marginRight: 10}}>
+                      <Text style={styles.accountTopic}>
+                        Connect your SoundCloud
+                      </Text>
+                      <Text style={{color: '#30467B99', width: 230}}>
+                        Choose your top five. Your profile will be visible to
+                        other users.
+                      </Text>
+                    </View>
+                    {/* third component */}
+                    <View style={styles.circle}></View>
+                    <View style={styles.accoutSelect}>
+                      {/* top5 from accounts */}
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  {/* third component */}
-                  <View style={styles.circle}></View>
-                  <View style={styles.accoutSelect}>
-                    {/* top5 from accounts */}
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
+                </TouchableOpacity>
+                {/* setModalVisible(true) */}
+                <TouchableOpacity onPress={() => {}}>
+                  <View style={styles.eachAccount}>
+                    {/* first component */}
+                    <View
+                      style={{
+                        width: 40,
+                        height: 40,
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}>
+                      {/* logo */}
+                      <ImageBackground
+                        style={{width: '100%', height: '100%'}}
+                        source={insta}></ImageBackground>
+                    </View>
+                    {/* second component */}
+                    <View style={{marginLeft: 10, marginRight: 10}}>
+                      <Text style={styles.accountTopic}>
+                        Connect your Instagram
+                      </Text>
+                      <Text style={{color: '#30467B99', width: 230}}>
+                        Choose your top five. Your profile will be visible to
+                        other users.
+                      </Text>
+                    </View>
+                    {/* third component */}
+                    <View style={styles.circle}></View>
+                    <View style={styles.accoutSelect}>
+                      {/* top5 from accounts */}
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
+                      <TouchableOpacity style={styles.top5}>
+                        <Text style={styles.top5input}>+</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <View style={styles.eachAccount}>
-                  {/* first component */}
-                  <View
-                    style={{
-                      width: 50,
-                      height: 50,
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}>
-                    {/* logo */}
-                    <ImageBackground
-                      style={{width: '100%', height: '100%'}}
-                      source={Spotify}></ImageBackground>
-                  </View>
-                  {/* second component */}
-                  <View style={{marginLeft: 10, marginRight: 10}}>
-                    <Text style={styles.accountTopic}>
-                      Connect your SoundCloud
-                    </Text>
-                    <Text style={{color: '#30467B99', width: 230}}>
-                      Choose your top five. Your profile will be visible to
-                      other users.
-                    </Text>
-                  </View>
-                  {/* third component */}
-                  <View style={styles.circle}></View>
-                  <View style={styles.accoutSelect}>
-                    {/* top5 from accounts */}
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </TouchableOpacity>
-              {/* setModalVisible(true) */}
-              <TouchableOpacity onPress={() => {}}>
-                <View style={styles.eachAccount}>
-                  {/* first component */}
-                  <View
-                    style={{
-                      width: 40,
-                      height: 40,
-                      display: 'flex',
-                      justifyContent: 'center',
-                    }}>
-                    {/* logo */}
-                    <ImageBackground
-                      style={{width: '100%', height: '100%'}}
-                      source={insta}></ImageBackground>
-                  </View>
-                  {/* second component */}
-                  <View style={{marginLeft: 10, marginRight: 10}}>
-                    <Text style={styles.accountTopic}>
-                      Connect your Instagram
-                    </Text>
-                    <Text style={{color: '#30467B99', width: 230}}>
-                      Choose your top five. Your profile will be visible to
-                      other users.
-                    </Text>
-                  </View>
-                  {/* third component */}
-                  <View style={styles.circle}></View>
-                  <View style={styles.accoutSelect}>
-                    {/* top5 from accounts */}
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.top5}>
-                      <Text style={styles.top5input}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </View>
-            {/* <InstagramLogin
+                </TouchableOpacity>
+              </View>
+              {/* <InstagramLogin
               modalVisible={modalVisible}
               appId="your-app-id"
               appSecret="your-app-secret"
@@ -661,201 +673,206 @@ const MyProfile = props => {
               onLoginSuccess={val => seToken(val)}
               onLoginFailure={data => console.log(data)}
             /> */}
-          </View>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={testimonialmodalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              settestimonialmodalVisible(!testimonialmodalVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.testimonialmodalView}>
-                <TouchableOpacity
-                  onPress={() => settestimonialmodalVisible(false)}
-                  style={{position: 'absolute', right: 20, top: 20}}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontWeight: '600',
-                      color: '#30467B99',
-                    }}>
-                    X
-                  </Text>
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    fontSize: 23,
-                    fontWeight: '600',
-                    color: '#30467B',
-                    marginBottom: 30,
-                  }}>
-                  A Testimonial request will be sent to :
-                </Text>
-                <Text
-                  style={{fontSize: 20, color: '#30467B99', fontWeight: '600'}}>
-                  {TestimonialEmail} 🥳
-                </Text>
-
-                <ScrollView></ScrollView>
-
-                {/* <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => this.setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable> */}
-              </View>
             </View>
-          </Modal>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              Alert.alert('Modal has been closed.');
-              setmodalVisible(!modalVisible);
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <TouchableOpacity
-                  onPress={() => setModalVisible(false)}
-                  style={{position: 'absolute', right: 20, top: 20}}>
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontWeight: '600',
-                      color: '#30467B99',
-                    }}>
-                    X
-                  </Text>
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    fontSize: 25,
-                    fontWeight: '600',
-                    color: '#30467B',
-                    marginBottom: 10,
-                  }}>
-                  What are some things you enjoy?
-                </Text>
-                <Text
-                  style={{
-                    textAlign: 'left',
-                    color: '#8390B0',
-                    marginBottom: 20,
-                  }}>
-                  Scroll to view more options
-                </Text>
-                <ScrollView>
-                  <SelectMultipleGroupButton
-                    multiple={true}
-                    group={[
-                      {value: 'Creative Direction'},
-                      {value: 'Performer'},
-                      {value: 'Engineer'},
-                      {value: 'PR'},
-                      {value: 'Sound Designer'},
-                      {value: 'Audio Engineer'},
-                      {value: 'Graphic Designer'},
-                      {value: 'Producer'},
-                      {value: 'A&R'},
-                      {value: 'Publisher'},
-                      {value: 'Manager'},
-                      {value: 'Mixer'},
-                      {value: 'Promoter'},
-                      {value: 'Photographer'},
-                      {value: 'Accompanist'},
-                      {value: 'Arranger'},
-                      {value: 'Security'},
-                      {value: 'Director'},
-                      {value: 'Composer'},
-                      {value: 'Record Executive'},
-                      {value: 'Album Cover Designer'},
-                      {value: 'Artist Development'},
-                      {value: 'Artist Relations'},
-                      {value: 'Entertainment Law'},
-                    ]}
-                    defaultSelectedIndexes={[0]}
-                    textStyle={{fontSize: 18, textAlign: 'center'}}
-                    buttonViewStyle={{
-                      alignItems: 'flex-start',
-                      borderWidth: 2,
-                      borderRadius: 27,
-                      borderColor: '#7F5AF0',
-                      textAlign: 'center',
-                      margin: 3,
-                    }}
-                    highLightStyle={{
-                      textColor: '#30467B',
-                      backgroundColor: 'transparent',
-                      borderRadius: 27,
-                      borderWidth: 1,
-                      borderColor: '#7F5AF0',
-                      textAlign: 'center',
-                      fontsize: 14,
-                      borderTintColor: 'transparent',
-                      textTintColor: 'white',
-                      backgroundTintColor: '#7F5AF0',
-                    }}
-                    containerViewStyle={{
-                      width: '100%',
-                      justifyContent: 'flex-start',
-                      alignContent: 'center',
-                    }}
-                    onSelectedValuesChange={
-                      selectedValues => {
-                        // setArr(selectedValues);
-                        // setNextPage('#7F5AF0');
-                      }
-                      // this._groupButtonOnSelectedValuesChange(selectedValues)
-                    }
-                  />
-                </ScrollView>
-
-                {/* <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => this.setModalVisible(!modalVisible)}
-              >
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable> */}
-              </View>
-            </View>
-          </Modal>
-          <View>
-            <TouchableOpacity onPress={() => signout()}>
-              <Text>Sign out</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              width: 100,
-              position: 'relative',
-              left: '80%',
-              bottom: -10,
-            }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#7F5AF0',
-                width: 70,
-                height: 45,
-                alignItems: 'center',
-                justifyContent: 'center',
-                borderRadius: 50,
-              }}
-              color={Colors.white}
-              size={40}
-              onPress={() => {
-                // save()
-                props.navigation.navigate('Explore');
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={testimonialmodalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                settestimonialmodalVisible(!testimonialmodalVisible);
               }}>
-              <Image source={require('../assets/arrow-right.png')}></Image>
-            </TouchableOpacity>
+              <View style={styles.centeredView}>
+                <View style={styles.testimonialmodalView}>
+                  <TouchableOpacity
+                    onPress={() => settestimonialmodalVisible(false)}
+                    style={{position: 'absolute', right: 20, top: 20}}>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: '600',
+                        color: '#30467B99',
+                      }}>
+                      X
+                    </Text>
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontSize: 23,
+                      fontWeight: '600',
+                      color: '#30467B',
+                      marginBottom: 30,
+                    }}>
+                    A Testimonial request will be sent to :
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      color: '#30467B99',
+                      fontWeight: '600',
+                    }}>
+                    {TestimonialEmail} 🥳
+                  </Text>
+
+                  <ScrollView></ScrollView>
+
+                  {/* <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => this.setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </Pressable> */}
+                </View>
+              </View>
+            </Modal>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert('Modal has been closed.');
+                setmodalVisible(!modalVisible);
+              }}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(false)}
+                    style={{position: 'absolute', right: 20, top: 20}}>
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: '600',
+                        color: '#30467B99',
+                      }}>
+                      X
+                    </Text>
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontSize: 25,
+                      fontWeight: '600',
+                      color: '#30467B',
+                      marginBottom: 10,
+                    }}>
+                    What are some things you enjoy?
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: 'left',
+                      color: '#8390B0',
+                      marginBottom: 20,
+                    }}>
+                    Scroll to view more options
+                  </Text>
+                  <ScrollView>
+                    <SelectMultipleGroupButton
+                      multiple={true}
+                      group={[
+                        {value: 'Creative Direction'},
+                        {value: 'Performer'},
+                        {value: 'Engineer'},
+                        {value: 'PR'},
+                        {value: 'Sound Designer'},
+                        {value: 'Audio Engineer'},
+                        {value: 'Graphic Designer'},
+                        {value: 'Producer'},
+                        {value: 'A&R'},
+                        {value: 'Publisher'},
+                        {value: 'Manager'},
+                        {value: 'Mixer'},
+                        {value: 'Promoter'},
+                        {value: 'Photographer'},
+                        {value: 'Accompanist'},
+                        {value: 'Arranger'},
+                        {value: 'Security'},
+                        {value: 'Director'},
+                        {value: 'Composer'},
+                        {value: 'Record Executive'},
+                        {value: 'Album Cover Designer'},
+                        {value: 'Artist Development'},
+                        {value: 'Artist Relations'},
+                        {value: 'Entertainment Law'},
+                      ]}
+                      defaultSelectedIndexes={[0]}
+                      textStyle={{fontSize: 18, textAlign: 'center'}}
+                      buttonViewStyle={{
+                        alignItems: 'flex-start',
+                        borderWidth: 2,
+                        borderRadius: 27,
+                        borderColor: '#7F5AF0',
+                        textAlign: 'center',
+                        margin: 3,
+                      }}
+                      highLightStyle={{
+                        textColor: '#30467B',
+                        backgroundColor: 'transparent',
+                        borderRadius: 27,
+                        borderWidth: 1,
+                        borderColor: '#7F5AF0',
+                        textAlign: 'center',
+                        fontsize: 14,
+                        borderTintColor: 'transparent',
+                        textTintColor: 'white',
+                        backgroundTintColor: '#7F5AF0',
+                      }}
+                      containerViewStyle={{
+                        width: '100%',
+                        justifyContent: 'flex-start',
+                        alignContent: 'center',
+                      }}
+                      onSelectedValuesChange={
+                        selectedValues => {
+                          // setArr(selectedValues);
+                          // setNextPage('#7F5AF0');
+                        }
+                        // this._groupButtonOnSelectedValuesChange(selectedValues)
+                      }
+                    />
+                  </ScrollView>
+
+                  {/* <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => this.setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </Pressable> */}
+                </View>
+              </View>
+            </Modal>
+            <View>
+              <TouchableOpacity onPress={() => signout()}>
+                <Text>Sign out</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                width: 100,
+                position: 'relative',
+                left: '80%',
+                bottom: -10,
+              }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#7F5AF0',
+                  width: 70,
+                  height: 45,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 50,
+                }}
+                color={Colors.white}
+                size={40}
+                onPress={() => {
+                  // save()
+                  navigation.navigate('Explore');
+                  console.log(props)
+                }}>
+                <Image source={require('../assets/arrow-right.png')}></Image>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+         {/* )}  */}
       </ScrollView>
-  )}
     </SafeAreaView>
   );
 };

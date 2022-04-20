@@ -26,10 +26,12 @@ import {
 } from 'react-native';
 import {Input, Icon} from 'react-native-elements';
 import { Auth } from 'aws-amplify';
+import {useNavigation} from '@react-navigation/native'
 // import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
 // console.log('auth', auth());
 // console.log('getAuth', getAuth);
 const SignIn = (props) =>  {
+const navigation = useNavigation()
 // const imageStyle= {width: 320, height: 320},
 const [email, setEmail]= useState('')
 const [password, setPassword]= useState('')
@@ -43,9 +45,9 @@ const [currentUser, setCurrentUSer]= useState(null)
 
         setCurrentUSer(user)
         // console.log('I am :', currentUser)
-        // props.navigation.navigate('MyProfile')
+        // navigation.navigate('MyProfile')
       } catch (error) {
-        Alert.alert('Opps,', error.message);
+        Alert.alert('Opps,',error);
       }
 
 
@@ -101,8 +103,13 @@ const [currentUser, setCurrentUSer]= useState(null)
           <TouchableOpacity
             style={styles.button1}
             onPress={() => {
-              signIn()
-              props.navigation.navigate('MyProfile', currentUser)
+              if(email && password) {
+                // signIn()
+              navigation.navigate('MyProfile', currentUser)
+              } else {
+                return 
+              }
+            
 
             }}>
             <Text
@@ -122,7 +129,7 @@ const [currentUser, setCurrentUSer]= useState(null)
 
           <Text
             style={{color: '#30467B', fontWeight: 'bold', top: 120}}
-            onPress={() => props.navigation.navigate('SignUp')}>
+            onPress={() => navigation.navigate('SignUp')}>
             Sign up
           </Text>
           {/* </KeyboardAvoidingView> */}

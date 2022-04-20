@@ -5,8 +5,8 @@
  * @format
  * @flow strict-local
  */
-import 'react-native-gesture-handler'
-import React , {useEffect, useState } from 'react';
+import 'react-native-gesture-handler';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,6 +16,7 @@ import {
   Image,
   useColorScheme,
   View,
+  RefreshControl,
 } from 'react-native';
 
 import {
@@ -35,35 +36,49 @@ import StackNav from './components/StackNav';
 import {Auth, Hub, DataStore} from 'aws-amplify';
 import Amplify from 'aws-amplify';
 import config from './src/aws-exports';
-import { withAuthenticator, Authenticator, SignIn } from 'aws-amplify-react-native';
+import {
+  withAuthenticator,
+  Authenticator,
+  SignIn,
+} from 'aws-amplify-react-native';
 
-Amplify.configure({...config, 
-Analytics: {
-  disabled: true
-}
+Amplify.configure({
+  ...config,
+  Analytics: {
+    disabled: true,
+  },
 });
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
+
 const App = () => {
-  const [isUserLoading, setisUserloading] = useState(true)
-
+  const [isUserLoading, setisUserloading] = useState(true);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
   useEffect(() => {
-    const listner = Hub.listen('datastore', async hubData => {
+    const listener = Hub.listen('datastore', async hubData => {
       const {event, data} = hubData.payload;
-      if(event === 'modelSynced' && data?.model?.name === 'User'){
-        console.log(`User model has synced`)
-        setisUserloading(false)
-      };
+      if (event === 'modelSynced' && data.model.name === 'User') {
+        console.log(`User model has synced!!`);
+        setisUserloading(false);
+      }
+      // await DataStore.start()
 
-      DataStore.start()
-      return () => listner()
-
-    })
-   }, [])
+      return () => listener();
+    });
+  }, []);
   return (
-    <View style={{flexGrow: 1}}>
-      <StackNav props={isUserLoading} />
+    <View
+      style={{flexGrow: 1}}
+      >
+      <StackNav isUserLoading={isUserLoading} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   sectionContainer: {
@@ -84,7 +99,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
 const signUpConfig = {
   header: 'My Customized Sign Up',
   hideAllDefaults: true,
@@ -95,36 +109,41 @@ const signUpConfig = {
       key: 'username',
       required: true,
       displayOrder: 1,
-      type: 'string'
+      type: 'string',
     },
     {
       label: 'Password',
       key: 'password',
       required: true,
       displayOrder: 2,
-      type: 'password'
+      type: 'password',
     },
     {
       label: 'PhoneNumber',
       key: 'phone_number',
       required: true,
       displayOrder: 3,
-      type: 'string'
+      type: 'string',
     },
     {
       label: 'Email',
       key: 'email',
       required: true,
       displayOrder: 4,
-      type: 'string'
-    }
-  ]
+      type: 'string',
+    },
+  ],
 };
 const usernameAttributes = 'My user name';
 
+export default App
+//   {
+//     signUpConfig,
+//     usernameAttributes,
+//   },
+// );
 
-export default App 
-  // {
+// {
 //   signUpConfig,
 //   usernameAttributes
 // })

@@ -61,9 +61,10 @@ const InclusivityAgreement = props => {
         InclusivityAgreement: props.route.params.InclusivityAgreement,
         sub: ""
   }
-  const save = async (val) => {
-    const userAuth = await Auth.currentAuthenticatedUser();
-    console.log(props.route.params)
+  const save = async (val) => { 
+    // { bypassCache: true}
+    // const userAuth = await Auth.currentAuthenticatedUser();
+    // console.log(props.route.params)
    try { await DataStore.save(
       new User({
         name: props.route.params.name,

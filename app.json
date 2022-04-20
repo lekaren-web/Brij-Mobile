@@ -1,4 +1,7 @@
 {
   "name": "brij_mobile",
-  "displayName": "brij_mobile"
+  "displayName": "brij_mobile",
+  "ios": {
+    "bundleIdentifier": "org.reactjs.native.example.brij-mobile"
+  }
 }

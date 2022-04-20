@@ -16,7 +16,9 @@ import {
 } from 'react-native';
 import {Auth, DataStore} from 'aws-amplify';
 import {Users, Match, Messages} from '../src/models';
+import {useNavigation} from '@react-navigation/native'
 const Message = props => {
+  const navigation = useNavigation()
   // constructor() {
   //   super();
   //   this.state = {
@@ -164,7 +166,7 @@ const Message = props => {
       </View>
       <View style={styles.footer}>
         <TouchableOpacity 
-        onPress={() => props.navigation.navigate('Forum')}
+        onPress={() => navigation.navigate('Forum')}
         style={styles.forumlogo}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -178,7 +180,7 @@ const Message = props => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-        onPress={() => props.navigation.navigate('Explore')}
+        onPress={() => navigation.navigate('Explore')}
          style={[styles.explorelogo]}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -187,7 +189,7 @@ const Message = props => {
         </TouchableOpacity>
 
         <TouchableOpacity
-        onPress={() => props.navigation.navigate('Calendar')}
+        onPress={() => navigation.navigate('Calendar')}
          style={styles.calendarlogo}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -196,7 +198,7 @@ const Message = props => {
         </TouchableOpacity>
 
         <TouchableOpacity
-        onPress={() => props.navigation.navigate('Message')}
+        onPress={() => navigation.navigate('Message')}
           style={styles.messagelogo}>
           <Image
             style={{width: '100%', height: '100%'}}
@@ -320,24 +322,24 @@ const styles = StyleSheet.create({
     bottom: 15,
   },
   forumlogo: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
   talkspacelogo: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
   explorelogo: {
-    width: 50,
-    height: 30,
+    width: 45,
+    height: 25,
   },
   calendarlogo: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
   messagelogo: {
-    width: 30,
-    height: 30,
+    width: 25,
+    height: 25,
   },
 });
 export default Message;

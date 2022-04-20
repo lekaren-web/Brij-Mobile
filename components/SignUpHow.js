@@ -12,13 +12,15 @@ import {
   TouchableOpacity,
   BackgroundImage
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native'
 // import { Icon } from 'react-native-elements';
-class SignUpHow extends Component {
-    constructor() {
-        super();
-}
+const SignUpHow = ( ) =>  {
+//     constructor() {
+//         super();
+const navigation = useNavigation()
+// }
 
-render(){
+// render(){
   return (
     <View styles={{backgroundColor: '#7F5AF0'}}>
       <StatusBar styles={{backgroundColor: '#7F5AF0'}} />
@@ -41,7 +43,7 @@ render(){
 
         {/* bottom Container*/}
         <View style={styles.bottomContainer}>
-          <TouchableOpacity style={styles.signin} onPress={() => this.props.navigation.navigate('EmailSignUp')}>
+          <TouchableOpacity style={styles.signin} onPress={() => navigation.navigate('EmailSignUp')}>
           {/* <Icon
           style={{marginRight: 20, padding: 0,height: 20, width: 25 }}
             color= 'white'
@@ -55,8 +57,8 @@ render(){
           name='phone' />  */}
             <Text style={styles.signinText}>SIGN UP WITH PHONE NUMBER</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
-          <Text style={{color: 'white', textAlign: 'center', margin: 20}}>Trouble Signing In?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+          <Text style={{color: 'white', textAlign: 'center', margin: 20}}>Already Have an account?</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -64,7 +66,7 @@ render(){
         </BackgroundImage> */}
     </View>
   )
-    }
+    // }
 };
 
 const styles = StyleSheet.create({
