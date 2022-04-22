@@ -1,4 +1,8 @@
 # Brij-Mobile
+
+## NOTE FOR NEW IOS DEV: Fork repository before cloning
+
+
 ## Make sure XCODE locally is version 13
 
 
